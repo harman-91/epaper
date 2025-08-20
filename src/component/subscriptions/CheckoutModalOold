@@ -1,0 +1,297 @@
+import React, { useState } from "react";
+import styles from "../../styles/CheckoutModal.module.css";
+import checkIcon from "/public/images/check.png";
+import removeIcon from "/public/images/remove.png";
+import Image from "next/image";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLoginBtn from "../my-account/googleLogin";
+import { updateUserEmail, updateUserMobile } from "../../store/slice/userSlice";
+import { useDispatch } from "react-redux";
+import MobileVerifyModal from "../Common/verifyMobile";
+function formatDateToDDMMMYY(dateInput) {
+  const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+
+  if (isNaN(date)) {
+    return "Invalid Date";
+  }
+
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const day = date.getDate().toString().padStart(2, "0"); // Ensure 2 digits
+  const month = months[date.getMonth()]; // Get month abbreviation
+  const year = date.getFullYear().toString().slice(-2); // Get last 2 digits of year
+
+  return `${day}-${month}-${year}`;
+}
+const CheckoutModal = ({
+  onClose,
+  location,
+  state,
+  city,
+  onChangeHandler,
+  couponCode,
+  applyCoupon,
+  selectedCoupon,
+  removeCoupon,
+  userDetail,
+  selectedPlan,
+  generateOrder,
+  validateError,
+  error,
+}) => {
+  const dispatch = useDispatch();
+  const onUpdateEmail = (email) => {
+    dispatch(updateUserEmail(email.email));
+  };
+  const onUpdateEmailError = (error) => {
+    console.log("error", error);
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleVerify = (number) => {
+    dispatch(updateUserMobile(number));
+
+    setIsModalOpen(false);
+  };
+  return (
+    <div className={styles.modalOverlay}>
+      <MobileVerifyModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onVerify={handleVerify}
+        token={userDetail?.auth_token}
+      />
+      <div className={styles.modalContent}>
+        <div className={styles.header}>
+          <h2>Checkout</h2>
+          <button onClick={onClose} className={styles.closeBtn}>
+            ×
+          </button>
+        </div>
+
+        <div className={styles.planInfo}>
+          <span>{selectedPlan.subscription_name_hi}</span>
+          <span className={styles.planAmt}>
+            <strong>
+              {" "}
+              {selectedPlan.currency == "INR"
+                ? "₹" + selectedPlan.displayPrice
+                : "$" + selectedPlan.displayPrice}
+            </strong>
+          </span>
+        </div>
+
+        <p className={styles.infoText}>
+          Please confirm your details before making the payment.
+        </p>
+
+        {Object.keys(userDetail).length == 0 ? (
+          <div className={styles.formGroup}>
+            <label>Your Login Information</label>
+            <div className={styles.userContact}>
+              <div className={styles.userdetail}>
+                {userDetail.email ? (
+                  <div className={styles.loginInfo}>{userDetail.email}</div>
+                ) : (
+                  <GoogleOAuthProvider
+                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                  >
+                    <GoogleLoginBtn
+                      onSuccess={onUpdateEmail}
+                      onError={onUpdateEmailError}
+                      auth={userDetail.auth_token}
+                      size="large"
+                    />
+                  </GoogleOAuthProvider>
+                )}
+                {validateError.email && (
+                  <span className={styles.error}>{validateError.email}</span>
+                )}
+              </div>
+              <span className={styles.circleor}>Or</span>
+              {location == "IN" && (
+                <div className={styles.userdetail}>
+                  {userDetail.mobile_no ? (
+                    <div className={styles.loginInfo}>
+                      {" "}
+                      {userDetail.mobile_no}
+                    </div>
+                  ) : (
+                    <div className={styles.loginInfo} onClick={handleOpenModal}>
+                      Add mobile +
+                    </div>
+                  )}
+                  {validateError.mobile && (
+                    <span className={styles.error}>{validateError.mobile}</span>
+                  )}
+                </div>
+              )}
+            </div>
+            {/* <input type="text" placeholder="Enter email or phone number" /> */}
+            <div>
+              <small>The invoice will be sent to this email</small>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.formGroup}>
+            <label>Your Login Information</label>
+            <div className={styles.userContact}>
+              {userDetail.email && (
+                <div className={styles.userdetail}>
+                  <div className={styles.loginInfo}>{userDetail.email}</div>
+                </div>
+              )}
+              {userDetail.mobile_no && (
+                <div className={styles.userdetail}>
+                  <div className={styles.loginInfo}>{userDetail.mobile_no}</div>
+                </div>
+              )}
+            </div>
+            {/* <input type="text" placeholder="Enter email or phone number" /> */}
+            <div>
+              <small>The invoice will be sent to this email</small>
+            </div>
+          </div>
+        )}
+
+        <div className={styles.formGroup}>
+          <label>Choose your Region</label>
+          <div className={styles.regionSelects}>
+              <select
+                name="state"
+                onChange={onChangeHandler}
+                value={location?.state_code}
+              >
+                <option value="">Select State</option>
+                {state?.map((item, index) => {
+                  return (
+                    <option
+                      key={item.iso2}
+                      value={item.iso2}
+                      data-stateid={item.id}
+                      name="state"
+                    >
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </select>
+              {validateError.state && (
+                <span className={styles.error}>{validateError.state}</span>
+              )}
+            
+            {/* <div className={styles.userdetail}>
+              <select
+                name="city"
+                onChange={onChangeHandler}
+                value={location?.city_code}
+              >
+                <option value="">Select City</option>
+                {city?.map((item, index) => {
+                  return (
+                    <option key={item.name} value={item.name}>
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </select>
+              {validateError.city && (
+                <span className={styles.error}>{validateError.city}</span>
+              )}
+            </div> */}
+          </div>
+          <small>Learn more about why we need this information</small>
+        </div>
+
+        {error && <div className={styles.error}>{error}</div>}
+        <div style={{ textAlign: "center" }}>
+          <button className={styles.payBtn} onClick={generateOrder}>
+            Pay Securely
+          </button>
+        </div>
+        <div className={styles.formGroup}>
+          <div className={styles.couponRow}>
+            <input
+              type="text"
+              placeholder="Enter coupon code"
+              value={selectedCoupon.promo_code}
+              onChange={onChangeHandler}
+              name="promo_code"
+              // onChange={(e) => setCoupon(e.target.value)}
+            />
+            {selectedCoupon?.promo_code && selectedCoupon?.isVerified != 0 ? (
+              <button className={styles.applyBtn} onClick={removeCoupon}>
+                Remove
+              </button>
+            ) : (
+              <button
+                className={styles.applyBtn}
+                onClick={() =>
+                  applyCoupon({ promo_code: selectedCoupon.promo_code })
+                }
+              >
+                Apply
+              </button>
+            )}
+            {(selectedCoupon.isVerified == 1 ||
+              selectedCoupon.isVerified == 2) && (
+              <Image
+                src={selectedCoupon.isVerified == 2 ? checkIcon : removeIcon}
+                alt="verify"
+                width={22}
+                height={20}
+              />
+            )}
+          </div>
+        </div>
+        <h3 className={styles.couponTitle}>Available Coupons</h3>
+        <div className={styles.couponList}>
+          {couponCode.map((item, index) => (
+            <div key={item.id} className={styles.couponCard}>
+              <div className={styles.couponTop}>
+                <div>
+                  <strong>{item.code}</strong>
+                  <p>{item.promo_code}</p>
+                </div>
+                <button
+                  onClick={() => applyCoupon(item)}
+                  className={styles.applyBtn}
+                >
+                  {selectedCoupon.promo_code === item.promo_code
+                    ? "Applied"
+                    : "Apply"}
+                </button>
+              </div>
+              <hr />
+              <p>Description: {item.description}</p>
+              {item.start_date && (
+                <p>Validity: {formatDateToDDMMMYY(item.start_date)}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutModal;

@@ -1,0 +1,270 @@
+/* SECTION BANNER HOME PAGE */
+.heroSection{ padding: 80px 0; border-bottom: #eee solid 5px; }
+.blueshadow{ position: absolute; top: 0; left: 0; z-index: -1; }
+.orangeshadow{ position: absolute; top: 0; right: 0; z-index: -1; }
+.contentHero{ display: flex; justify-content: center; position: relative; z-index: 2; }
+.maincontent.mobile{ display: none; }
+.contentHero .maincontent h1{ font-size: 148px; line-height: 120px; font-weight: 900; color: #c71117; font-family: "Khand", serif; }
+.contentHero .maincontent h2{ font-family: "Khand", serif;  font-size: 48px; font-weight: 600; color: #000; }
+.contentHero .maincontent h2.first{ margin-left: -50px; }
+.contentHero .maincontent h2.second{ position: relative; left: 100%; transform: translateX(-15%); margin-top: -10px; }
+.editionTitle { font-weight: 500; color: #000; }
+.editionContainer { display: flex; justify-content: center; position: relative; z-index: 2; }
+.editionContainer .selectedEdition { display: flex; gap: 30px; align-items: flex-start; margin-top: 30px; background-repeat: no-repeat;}
+.editionContainer .selectedEdition .edition .item{ position: relative; background: #fff; padding: 3px; box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px; }
+.editionContainer .selectedEdition .edition .item .selectEdition{ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; display: none; border: #fff solid 2px; border-radius: 25px; padding: 5px 10px; color: #fff; font-size: 16px; width: 160px; text-align: center; cursor: pointer;}
+.editionContainer .selectedEdition .edition  .item:hover .selectEdition{display: block;}
+.editionContainer .selectedEdition .edition .item:hover::before{ content: ""; position: absolute; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1; }
+.editionContainer .selectedEdition .edition:last-child{ margin-top: 20px; }
+.editSelectedCity a{ display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 5px 12px; gap: 5px; border-radius: 25px; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; }
+.editSelectedCity .likeBookmark i, .editSelectedCity .likeBookmark svg { display: flex; align-items: center; justify-content: center; background: #fff; padding: 5px 10px; width: 40px; height: 40px; border-radius: 25px; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; }
+.tooltipContainer { position: relative; }
+.buttonContent { display: flex; align-items: center; justify-content: center; border-radius: 50px; cursor: pointer; position: relative; z-index: 10; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; }
+.buttonContent:hover::before { opacity: 1; }
+.text { font-size: 18px; font-weight: 600; margin-right: 12px; white-space: nowrap; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); transition: letter-spacing 0.3s ease; }
+.buttonContent:hover .text { letter-spacing: 1px; }
+.share-icon { fill: white; transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), fill 0.3s ease; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)); }
+.buttonContent:hover .shareIcon { transform: rotate(180deg) scale(1.1); fill: #ffffff; }
+.tooltipContent { position: absolute; top: 102%; left: 50%; transform: translateX(-50%) scale(0.8); background: white; border-radius: 15px; padding: 22px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; transition: opacity 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.5s ease; z-index: 100; pointer-events: none; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.9); }
+.tooltipContainer:hover .tooltipContent { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); pointer-events: auto; }
+.socialIcons { display: flex; justify-content: space-between; gap: 12px; }
+.socialIcons a{ padding: 0; width: auto !important; }
+.socialIcon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), background 0.3s ease, box-shadow 0.4s ease; position: relative; overflow: hidden; }
+.socialIcon:hover::before { opacity: 1; }
+.socialIcon svg { width: 24px; height: 24px; fill: #333;transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), fill 0.3s ease; z-index: 1; }
+.socialIcon:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
+.socialIcon:active { transform: translateY(-2px) scale(1.05); box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); }
+.socialIcon:hover svg { transform: scale(1.2); fill: white; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(110, 142, 251, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(110, 142, 251, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(110, 142, 251, 0); }
+}
+.buttonContent { animation: pulse 3s infinite; }
+@keyframes ripple {
+  0% { transform: scale(0);opacity: 1; }
+  100% { transform: scale(4);opacity: 0; }
+}
+.buttonContent::before { content: ""; position: absolute; inset: 0; background: rgba(255, 255, 255, 0.3); border-radius: inherit; transform: scale(0); opacity: 0; }
+.buttonContent:active::before { animation: ripple 0.6s linear; }
+
+
+  /* Alphabet Navigation */
+  .alphabetNav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+  .card-product
+  .alphabetNav button {
+    border: none;
+    background: #f1f1f1;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .alphabetNav button:hover {
+    background: #007bff;
+    color: #fff;
+  }
+  
+  /* City List Grid */
+  .cityList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .cityItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+  }
+  
+  .cityItem:hover {
+    background: #007bff;
+    color: white;
+    transform: scale(1.05);
+  }
+  
+  .cityItem img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+  
+  .cityItem.selected {
+    border: 2px solid #007bff;
+    background: #e7f0ff;
+  }
+  
+  /* Skeleton Placeholder */
+  .cityItem.skeleton {
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  /* Modal Footer */
+  .modalFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+  }
+  
+  .modaFooter p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .modalFooter .btn {padding: 8px 15px;}
+  
+
+
+
+
+/* Backdrop */
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Modal */
+  .modal {
+    background: white;
+    width: 500px;
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Header */
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .searchInput {
+    padding: 5px;
+    width: 50%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Alphabet Navigation */
+  .alphabetNav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin: 15px 0;
+  }
+  
+  .alphabetNav button {
+    border: none;
+    background: #f1f1f1;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .alphabetNav button:hover {
+    background: #007bff;
+    color: white;
+  }
+  
+  /* City List */
+  .cityList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .cityItem {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .cityItem:hover {
+    background: #007bff;
+    color: white;
+  }
+  
+  .cityItem.selected {
+    background: #e0f2ff;
+    border: 2px solid #007bff;
+  }
+  
+  /* Footer */
+  .modalFooter {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .primaryBtn {
+    background: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .secondaryBtn {
+    background: #ccc;
+    color: black;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

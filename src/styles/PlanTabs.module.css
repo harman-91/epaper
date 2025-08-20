@@ -1,0 +1,210 @@
+.planContainer {
+  border-bottom: rgba(21, 21, 21, 0.1) solid 1px;
+  display: flex;
+  justify-content: center;
+  gap: 90px;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.planContainer > div {
+  cursor: pointer;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.activePlan {
+  border-bottom: red solid 2px;
+  font-weight: bold;
+}
+
+.plansWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+}
+
+.planCard {
+  background: white;
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  flex: 0 0 280px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.planCard:hover {
+  background: #feecec;
+  border: #dc2626 solid 1px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.selectedPlan {
+  background: #feecec;
+  border: #dc2626 solid 1px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.featured {
+  position: relative;
+}
+
+.mostPopular {
+  background: #eb0d2a;
+  color: #fff;
+  position: absolute;
+  display: inline-block;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 15px;
+  border-radius: 15px;
+}
+
+.planSummary {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.planName {
+  font-weight: 600;
+}
+
+.planAmount {
+  font-size: 36px;
+  line-height: 46px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.planAmountDay {
+  background: #f9dede;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 2px 15px;
+}
+
+.plansWrapper ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.freeTrial {
+  display: flex;
+  justify-content: center;
+  
+}
+.freeTrailday {
+  color: green;
+  padding: 2px 8px 0;
+  border: 1px dotted green;
+  border-radius: 100px;
+  font-size: 10px;
+}
+.plansWrapper ul li {
+  font-size: 14px;
+  padding: 10px 0;
+  margin-bottom: 0.5rem;
+  border-bottom: rgb(204, 204, 204, 50%) solid 1px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.continueBtn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.continueBtn:hover {
+  background-color: #b91c1c;
+}
+
+.selectCouponCode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  background: none;
+  border: 1px dashed #999;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .plansWrapper {
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1180px) {
+  .plansWrapper {
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  
+  .web {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+  .planContainer {
+    gap: 30px;
+    margin-bottom: 10px;
+  }
+}
+.skeletonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.skeletonWrapperCard {
+  background: white;
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  flex: 0 0 280px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}

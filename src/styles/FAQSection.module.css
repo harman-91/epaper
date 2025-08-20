@@ -1,0 +1,163 @@
+.faqSection {
+  max-width: 1200px;
+  margin: 50px auto 0;
+  padding: 0 20px 200px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.faqTitle {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Filter Buttons */
+.faqFilters {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 8px 20px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.filterBtn:hover {
+  background: #f5f5f5;
+}
+
+.filterBtn.active {
+  background: #f9dede;
+  color: #333;
+  font-weight: 600;
+}
+
+.filterBtn.active:hover {
+  background: #f9dede;
+}
+
+/* FAQ Container */
+.faqContainer {
+  /* No specific styles needed for container */
+}
+
+.faqItem {
+  border-bottom: 1px solid #f9dede;
+}
+
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  outline: none;
+}
+
+.faqQuestion:hover {
+  background: #f9dede;
+}
+
+.faqQuestion:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.faqQuestion h4 {
+  margin: 0;
+  flex: 1;
+}
+
+.faqToggleIcon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 15px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faqAnswer.open {
+  max-height: 500px;
+  padding: 15px 15px;
+}
+
+.faqAnswer p {
+  margin: 0;
+}
+
+.faqList {
+  margin-left: 20px;
+}
+
+.faqLink {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.noResults {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .faqSection {
+    padding: 0 10px 200px;
+  }
+
+  .faqTitle {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .faqFilters {
+    margin-bottom: 20px;
+  }
+
+  .filterBtn {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .faqAuestion {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .faqAnswer {
+    font-size: 0.9rem;
+  }
+
+  .faqAnswer.open {
+    padding: 10px 10px;
+  }
+}

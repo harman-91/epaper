@@ -1,0 +1,507 @@
+@import url("https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@100..800&display=swap");
+
+.loginBtn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnLogin {
+  padding: 4px 15px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  min-height: 30px;
+  color: #fff;
+  border-radius: 3px;
+  background-color: #da251d;
+  background-image: none;
+}
+.btnLogin:hover {
+  color: #fff;
+}
+
+/* new css start here */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.header {
+  background: #fef2ee;
+  color: white;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.premiumBadge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color:#000;
+}
+
+.header .subtitle {
+  font-size: 3rem;
+  font-weight: 700;
+  color:#dc2626;
+  margin-bottom: 20px;
+}
+
+.header p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.logoSection{width: 100%;}
+.logoSection svg{width: 150px; height: 50px;}
+
+.ctaButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btnPrimary {
+  background: white;
+  color: #dc2626;
+}
+
+.btnSecondary {
+  color: #000;
+  border: 1px solid #e5e7eb;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+.bgRed600 {
+  background: #dc2626;
+  color: white;
+  padding: 10px 60px 3px;
+}
+.bgRed600:hover {
+  color: #fff;
+}
+
+/* Why Choose Section */
+.whyChoose {
+  padding: 60px 0;
+  background: white;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0px;
+  color: #1f2937;
+}
+
+.sectionSubtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin-bottom: 60px;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.benefitCard {
+  text-align: center;
+  padding: 30px 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.benefitCard:hover {
+  transform: translateY(-5px);
+}
+
+.benefitIcon {
+  width: 60px;
+  height: 60px;
+  background: #dc2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: white;
+  font-size: 24px;
+}
+.benefitIcondiamond {
+  width: 60px;
+  height: 60px;
+  background: #dc2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: white;
+  font-size: 24px;
+      padding: 14px;
+}
+
+.benefitCard h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1f2937;
+}
+
+.benefitCard p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* Pricing */
+.pricing {
+  padding: 60px 0;
+  background: white;
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 60px;
+}
+
+.pricingCard {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 40px 30px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.pricingCard:hover {
+  transform: translateY(-5px);
+}
+
+.pricingCard.popular {
+  border-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.popularBadge {
+  background: #dc2626;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pricingCard h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.priceBox{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.oldprice{
+  font-size: 2rem;
+  text-decoration: line-through;
+  margin-right: 10px; 
+  color: #bebebe;
+}
+
+.pricePeriod {
+  color: #6b7280;
+  margin: 30px 0;
+}
+.perDay{background-color: #ffe7e7; border-radius: 4px; padding: 4px 12px 0px;}
+
+.featuresListPricing {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.featuresListPricing li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.featuresListPricing li svg {
+  width: 12px;
+  height: 12px;
+  fill: #dc2626;
+}
+.ticks li svg {
+  width: 15px;
+  height: 15px;
+  fill: rgb(20, 182, 79);
+}
+
+/* FAQ */
+.faq {
+  padding: 60px 0;
+  background: #f8f9fa;
+}
+
+.faqList {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 25px;
+}
+
+.faqItem {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  transition: all 0.3s ease;
+}
+.faqItem:hover {
+  box-shadow: 1px 3px 7px 0px rgb(0 0 0 / 10%);
+}
+
+.faqQuestion {
+  padding: 25px;
+  font-weight: 600;
+  color: #1f2937;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.faqQuestion span svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.faqQuestion span svg.rotated {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  padding: 15px 25px;
+  display: none;
+  transition: all 0.3s ease;
+}
+.arrow {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+  margin-left: 8px;
+}
+
+.rotated {
+  transform: rotate(-135deg); /* flips the arrow up */
+}
+
+/* Footer CTA */
+.footerCta {
+  background: linear-gradient(135deg, #dc2626, #f97316);
+  color: white;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.footerCta h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.footerCta p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+}
+
+.footerInfo {
+  margin-top: 40px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+.footerInfo a {
+  color: #fff;
+  text-decoration: underline;
+}
+.footerInfo a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 40px 0 10px;
+  }
+  .whyChoose,
+  .faq {
+    padding: 40px 0;
+  }
+  .pricing {
+    padding: 20px 0 40px;
+  }
+  .header h1,
+  .header .subtitle,
+  .sectionTitle,
+  .footerCta h2 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+  .header p,
+  .sectionSubtitle,
+  .footerCta p {
+    font-size: 1rem;
+  }
+  .benefitCard p {
+    font-size: 0.8rem;
+  }
+  .sectionSubtitle {
+    margin-bottom: 0px;
+  }
+  .benefitsGrid {
+    margin-top: 20px;
+  }
+  .benefitCard {
+    padding: 20px;
+  }
+  .benefitsGrid {
+    gap: 20px;
+  }
+  .sectionTitle {
+    margin-bottom: 10px;
+  }
+
+  .benefitIcon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+  .benefitCard h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0px;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .benefitsGrid,
+  .pricingGrid {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+
+  .faqList {
+    margin-top: 10px;
+  }
+
+  .pricingCard {
+    padding: 20px;
+  }
+  .pricingCard h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+  }
+  .price {
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+  .pricePeriod {
+    margin-bottom: 15px;
+  }
+
+  .pricingCard.popular {
+    transform: none;
+  }
+
+  .featuresListPricing li {
+    font-size: 0.9rem;
+  }
+  .featuresListPricing li svg {
+    width: 10px;
+    height: 10px;
+  }
+  .faqAnswer {
+    font-size: 0.9rem;
+    padding: 0px 25px 15px;
+  }
+  .footerCta {
+    padding: 30px 0;
+  }
+  .footerCta p {
+    margin-bottom: 20px;
+  }
+  .footerInfo {
+    margin-top: 20px;
+  }
+}

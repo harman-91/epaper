@@ -1,0 +1,218 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  text-align: left;
+}
+
+.modalContent {
+  background: #fff;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.header h2 {
+  margin-bottom: 0;
+}
+
+.closeBtn {
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.planInfo {
+  background: #fee7e7;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #a39696;
+}
+.planInfo span {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.planInfo span.planAmt {
+  font-size: 18px;
+}
+.infoText {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 16px;
+}
+.loginInfo {
+  border: #ccc solid 1px;
+  border-radius: 10px;
+  padding:9px 8px 4px;
+  display: inline-block;
+}
+.circleor{border:5px solid #eee;
+height: 25px;
+width: 25px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 17px 15px 13px;
+}
+
+.formGroup {
+  margin-bottom: 10px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.formGroup input {
+  width: 50%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.formGroup select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.formGroup small {
+  font-size: 12px;
+  color: #777;
+}
+
+.regionSelects {
+  display: flex;
+  gap: 10px;
+}
+
+.couponRow {
+  display: flex;
+  gap: 10px;
+}
+
+.applyBtn {
+  padding: 8px 16px;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.payBtn {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #da251d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px auto 20px;
+  font-size: 14px;
+  width: 90%;
+}
+
+.couponTitle {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.couponList {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding-bottom: 10px;
+}
+
+.couponCard {
+  flex: 0 0 auto;
+  min-width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #fff;
+  box-shadow: 3px 10px 12px rgba(235, 13, 42, 0.1);
+}
+.couponTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.couponTop p {
+  font-size: 14px;
+  margin: 4px 0 0 0;
+}
+
+.couponCard hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 10px 0;
+}
+
+.userContact {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+}
+.userdetail {
+  display: flex;
+  flex-direction: column;
+  width: 52%;
+}
+.userdetail button{padding: 4px 8px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 10px !important;
+    height: inherit !important;}
+
+.error {
+  color: red;
+  font-size: 1em;
+  margin-top: 6px;
+  text-transform: capitalize;
+  text-align: center;
+}
+.totalpay{display: flex; justify-content: space-between;}
+.totalpay span{font-size: 15px; font-weight: 600;}
+
+@media screen and (max-width:500px) {
+
+  .userContact{flex-wrap: wrap; gap: 5px; justify-content:inherit; align-items:inherit;}
+  .userdetail{width: 100%;}
+  .circleor{margin: 0 auto;}
+}

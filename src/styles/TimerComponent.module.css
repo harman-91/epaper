@@ -1,0 +1,90 @@
+.timerContainer {
+    margin: 20px 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.timerContainer .timerjnm{
+    background-color: #ed1d23;  
+    padding: 12px 24px;
+    border-radius: 8px;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+  
+/* Font Style */
+.fontMon {
+    font-size: 16px;
+    font-family: "Poppins", serif;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+  
+  /* Countdown Wrapper */
+.countdownWrp {
+    background-color: #f8a5a7;
+    border-radius: 25px;
+    padding: 2px 10px;
+    color: #000;
+    display: flex;
+    align-items: center;
+}
+.countdownWrp img {
+    margin-right: 10px;
+}
+.timerSubs {
+    color: #000;
+    background-color: #fff;
+    padding: 2px 12px;
+    border-radius: 3px;
+}
+  
+/* Subscription Container */
+.subscriptionContainer {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+  
+.subscriptionContainer p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+  
+.subscriptionContainer button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+  
+.subscriptionContainer button:hover {
+    background-color: #2980b9;
+}
+  
+.dateContainer span{
+    font-family: "Khand", serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+  .subscribeBtn {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+  
