@@ -28,9 +28,10 @@ import { useSwipeable } from "react-swipeable";
 
 // Set up PDF.js worker
 import PdfView from "./pdfView";
+import { epaperDetail } from "@/services/detailService";
 
 const DetailComponentPDF = ({
-  data = [],
+  // data = [],
   currentDate,
   eid,
   currentCity,
@@ -39,6 +40,18 @@ const DetailComponentPDF = ({
   currentCities = [],
   domainInfo,
 }) => {
+  const [data, setData] = useState();
+  useEffect(async () => {
+    try {
+      const dat = await epaperDetail({
+        type: domainInfo.apiDomainValue,
+        date: currentDate,
+        ename: currentCity,
+        pageno,
+      });
+      setData(dat);
+    } catch (err) {}
+  }, []);
   // State management
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -158,7 +171,6 @@ const DetailComponentPDF = ({
 
   // Handle user authentication and subscription logic
   useEffect(() => {
-    
     if (userLoading || isAuthenticated == null) return;
 
     const pageview = parseInt(localStorage.getItem(variable.FIRST_VIEW)) || 60;

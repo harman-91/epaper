@@ -82,7 +82,7 @@ export const getServerSideProps = withHeaderProps("HeaderLayout")(
         } ${year}`
       : `${day}-${monthAbbr}-${year}`;
     const formattedCity =
-      currentCity.charAt(0).toUpperCase() + currentCity.slice(1);
+      currentCity?.charAt(0)?.toUpperCase() + currentCity?.slice(1);
     const title = `${formattedCity} Epaper ${formattedDate}: ${domainInfo.name} ${formattedCity} Newspaper Edition Online in ${domainInfo.language}`;
     const description = `${domainInfo.name} ${formattedCity} Newspaper ${formattedDate}: Read ${formattedCity} Edition Epaper of ${formattedDate} Here. Get latest news & coverage from ${formattedCity} and Across India Here`;
     const keywords = `${formattedCity} Newspaper ${formattedDate}, ${domainInfo.name} ${formattedCity} Edition ${formattedDate}, ${domainInfo.name} ${formattedCity} ${domainInfo.language} News Paper`;
