@@ -3,11 +3,13 @@ import "../styles/globals.css";
 import Head from "next/head";
 import Providers from "@/store/provider";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import CommonLayout from "@/component/layout/commonLayout";
 import { NextIntlClientProvider } from "next-intl";
 import { useRouter } from "next/router";
 import HeaderLayout from "@/component/layout/headerLayout";
+import { epaperSearchCities } from "@/services/citiesServices";
+import { convertToCityList } from "@/utils/apiUtils";
 
 // Font configurations
 const archivo = Archivo({
@@ -18,22 +20,32 @@ const archivo = Archivo({
 });
 
 function MyApp({ Component, pageProps }) {
+  const [city, setCity] = useState(null);
   const router = useRouter();
-
+  const getcity = async () => {
+    const currentCities = await epaperSearchCities({
+      domain: domainInfo.apiDomainValue,
+    });
+    setCity(currentCities);
+  };
+  useEffect(async () => {
+    getcity();
+  }, []);
   const {
     metadata = {},
     cities = [],
     // headerData = null,
     pageType,
-    domainInfo
+    domainInfo,
   } = pageProps;
 
   let Layout = Fragment;
   if (pageType === "CommonLayout") {
     Layout = CommonLayout;
-  }else if(pageType==="HeaderLayout") {
+  } else if (pageType === "HeaderLayout") {
     Layout = HeaderLayout;
   }
+  const citi = convertToCityList(city);
 
   return (
     <Providers>
@@ -92,13 +104,9 @@ function MyApp({ Component, pageProps }) {
       </Head>
 
       <div className={`${archivo.variable} `}>
-      
-          <Layout cities={cities} domainInfo={domainInfo}>
-            <Component
-              {...pageProps}
-           
-            />
-          </Layout>
+        <Layout cities={cities} domainInfo={domainInfo}>
+          <Component {...pageProps} currentCities={city} cities={citi} />
+        </Layout>
       </div>
     </Providers>
   );
