@@ -88,7 +88,6 @@ const SocialIcons = ({ url, id, bookmarkData, comment, data }) => {
   };
   const likeArticleRef = useRef(false);
   useEffect(() => {
-    console.log("--id--",id)
     if (
       typeof window !== "undefined" &&
       userData &&

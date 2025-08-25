@@ -195,8 +195,8 @@ const useLogin = (actionRef = "header_login_btn", data) => {
       // },10000)
               dispatch(nonLoggedIn())
 
-      if (isGoogleLogin !== false)
-        window.addEventListener("scroll", loadOneTapLogin, { once: true });
+      // if (isGoogleLogin !== false)
+      //   window.addEventListener("scroll", loadOneTapLogin, { once: true });
     }
   };
 

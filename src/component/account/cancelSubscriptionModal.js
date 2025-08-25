@@ -1,19 +1,26 @@
-'use client';
-import React from 'react';
-import LoadingButton from '../global/LoadingButton';
+"use client";
+import React from "react";
+import LoadingButton from "../global/LoadingButton";
 
 const reasons = [
-  'Too expensive',
-  'Poor customer service',
-  "I'm not using it enough",
-  'I found a better alternative',
-  'Missing key features I need',
-  'I just need a break',
-  'Technical issues',
-  'Other',
+  "बहुत महंगा है",
+  "ग्राहक सेवा अच्छी नहीं है",
+  "मैं ज़्यादा इस्तेमाल नहीं कर रहा/रही हूँ",
+  "मुझे इससे बेहतर विकल्प मिल गया है",
+  "ज़रूरी फीचर नहीं मिल रहे",
+  "थोड़े समय का ब्रेक चाहिए",
+  "तकनीकी दिक्कतें आ रही हैं",
+  "कुछ और कारण",
 ];
 
-const CancelSubscriptionModal = ({ onClose, cancelSubscription, loading, setReason, error }) => {
+const CancelSubscriptionModal = ({
+  onClose,
+  cancelSubscription,
+  loading,
+  setReason,
+  error,
+  end_date,
+}) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[1000]">
       <div className="bg-white p-8 rounded-lg max-w-lg w-full relative">
@@ -23,10 +30,13 @@ const CancelSubscriptionModal = ({ onClose, cancelSubscription, loading, setReas
         >
           ×
         </button>
-        <h2 className="text-xl font-semibold mb-4">Cancel Your Subscription?</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Cancel Your Subscription?
+        </h2>
         <p className="text-gray-600 mb-6">
-          You&apos;re about to cancel an active subscription. You&apos;ll keep full access until June 30, 2025,
-          after which your plan will not renew.
+          आप एक सक्रिय ऑटो-रिन्यू सब्सक्रिप्शन कैंसल करने जा रहे हैं। आपको{" "}
+          <b>{end_date?.split("T")?.[0]}</b> तक पूरा एक्सेस मिलता रहेगा, इसके
+          बाद आपकी योजना रिन्यू नहीं होगी।
         </p>
         <div className="flex flex-wrap gap-2 mt-5">
           {reasons.map((reason, idx) => (
@@ -43,7 +53,9 @@ const CancelSubscriptionModal = ({ onClose, cancelSubscription, loading, setReas
           ))}
         </div>
         {error && (
-          <div className="text-red-600 text-base mt-2 text-center capitalize">{error}</div>
+          <div className="text-red-600 text-base mt-2 text-center capitalize">
+            {error}
+          </div>
         )}
         <div className="mt-8 flex justify-end gap-3">
           <button
@@ -51,7 +63,7 @@ const CancelSubscriptionModal = ({ onClose, cancelSubscription, loading, setReas
             onClick={onClose}
             type="button"
           >
-            Keep My Subscription
+            सब्सक्रिप्शन जारी रखें
           </button>
           <LoadingButton
             className="px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
@@ -62,7 +74,7 @@ const CancelSubscriptionModal = ({ onClose, cancelSubscription, loading, setReas
             dotColor="#ffff"
             size="8px"
           >
-            Cancel Subscription
+            सब्सक्रिप्शन कैंसल करें
           </LoadingButton>
         </div>
       </div>

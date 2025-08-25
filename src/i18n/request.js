@@ -4,7 +4,6 @@ import { headers } from "next/headers";
 export default getRequestConfig(async ({ request }) => {
   const headersList = await headers();
   const host = headersList.get("host") || "localhost";
-  console.log("==",host)
   const domainLocaleMap = {
     "paper.naidunia.com": "hi",
     "epaper.naidunia.com": "hi",

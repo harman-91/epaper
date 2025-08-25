@@ -7,7 +7,6 @@ import variable from "../utility/variable";
 import axios from "axios";
 
 function SideBarNav(props) {
-  //console.log("_-",css)
   const logoutUser = async () => {
     try {
       removeCookie(variable.LOGIN_DETAIL);
@@ -20,7 +19,6 @@ function SideBarNav(props) {
 
       window.location.href = `/?logout-account`;
     } catch (err) {
-      console.log("er", err);
       window.location.href = `/?logout-account`;
     }
   };
@@ -57,7 +55,7 @@ function SideBarNav(props) {
               Edit Profile
             </a>
           </li>
-          {/* <li><a href="">Contact Us</a></li> */}
+          <li><a href="/support" className={ props.pagetype === "edit-profile" ? css.active : "" }>Support</a></li>
         </ul>
         <hr />
         <ul>

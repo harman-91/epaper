@@ -22,7 +22,7 @@ export default function TabbedPlans({
 }) {
   return (
     <>
-      <div className={styles.planContainer}>
+      {/* <div className={styles.planContainer}>
         {duration.map((key) => {
           if (
             !plansList[key.duration_type] ||
@@ -42,7 +42,7 @@ export default function TabbedPlans({
             </div>
           );
         })}
-      </div>
+      </div> */}
       {loadingPlans ? (
         <SkeletonTheme baseColor="#e0e0e0" highlightColor="#f5f5f5">
           <div className={styles.skeletonWrapper}>

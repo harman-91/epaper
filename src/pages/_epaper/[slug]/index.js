@@ -4,7 +4,6 @@ import { epaperDetail } from "@/services/detailService";
 import { epaperSearchCities } from "@/services/citiesServices";
 import { getDomain, withHeaderProps } from "@/component/utility/CommonUtils";
 import Head from "next/head";
-import DetailComponentPDF from "@/component/detail/detailComponetpdf";
 
 export const getServerSideProps = withHeaderProps("CommonLayout")(
   async (context) => {
@@ -132,7 +131,7 @@ export default function EpaperPage({
 
   return (
     <>
-      <DetailComponentPDF
+      <DetailComponent
         data={data}
         currentDate={currentDate}
         eid={eid}

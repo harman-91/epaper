@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import styles from '@/styles/CancelSubscriptionModal.module.scss';
+import GlobalLink from '../global/GlobalLink';
 
 export default function ThankYouModal({ isOpen, onClose,userDetail }) {
   useEffect(() => {
@@ -54,12 +55,12 @@ export default function ThankYouModal({ isOpen, onClose,userDetail }) {
 हम आपके लिए बेहतरीन अनुभव और सुविधाएँ देने के लिए पूरी तरह समर्पित हैं।        </p>
 
         <div className={styles.ctaSection}>
-          <a href="#" className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleClick}>
+          <GlobalLink href="#" className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleClick}>
             Explore Premium Features
-          </a>
-          <a href="/subscription-history" className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleClick}>
+          </GlobalLink>
+          <GlobalLink href="/subscription-history" className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleClick}>
             Manage Account
-          </a>
+          </GlobalLink>
         </div>
 
         <div className={styles.socialProof}>

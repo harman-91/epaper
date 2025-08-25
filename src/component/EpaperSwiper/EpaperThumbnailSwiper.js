@@ -7,6 +7,7 @@ import "swiper/css/thumbs";
 import "swiper/css/free-mode";
 import Image from "next/image";
 import Styles from "../../styles/Swiper.module.css";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 
 const EpaperThumbnailSwiper = ({
   images,
@@ -48,7 +49,7 @@ const EpaperThumbnailSwiper = ({
                 className="text-gray-500 hover:text-gray-700 text-xl"
                 onClick={() => setShowPages(false)}
               >
-                ✕
+                <XCircleIcon />
               </button>
             </div>
             <div className="grid grid-cols-3 gap-2 p-3 overflow-y-auto max-h-[60vh]">
@@ -66,10 +67,11 @@ const EpaperThumbnailSwiper = ({
                     src={src}
                     alt={`Thumbnail ${index}`}
                     width={100}
-                    height={150}
+                    height={120}
                     style={{ width: "100%", height: "auto" }}
                     className="object-cover"
                   />
+                  <div style={{fontSize: 10, textAlign: "center"}}>Page - {index}</div>
                 </div>
               ))}
             </div>
@@ -82,7 +84,7 @@ const EpaperThumbnailSwiper = ({
           <div className="swiper-button-next" />
           <Swiper
             onSwiper={setThumbsSwiper}
-            spaceBetween={10}
+            spaceBetween={20}
             slidesPerView={10}
             freeMode={true}
             watchSlidesProgress={true}
@@ -105,14 +107,17 @@ const EpaperThumbnailSwiper = ({
                 {isLoading ? (
                   <div className={Styles.loadingThumbnail} />
                 ) : (
-                  <Image
-                    src={src}
-                    alt={`Thumbnail ${index}`}
-                    width={100}
-                    height={55}
-                    style={{ width: "100%", height: "auto" }}
-                    className={Styles.thumbnailImage}
-                  />
+                  <>
+                    <Image
+                      src={src}
+                      alt={`Thumbnail ${index}`}
+                      width={150}
+                      height={55}
+                      style={{ width: "100%", height: "auto" }}
+                      className={Styles.thumbnailImage}
+                    />
+                  <div style={{fontSize: 10, textAlign: "center"}}>Page - {index}</div>   
+                  </>               
                 )}
               </SwiperSlide>
             ))}

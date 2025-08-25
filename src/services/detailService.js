@@ -9,7 +9,6 @@ exports.epaperDetail = async ({ type, date,ename }) => {
     const response = await axios.get(
      url
     );
-     console.log("url", url);
     return response?.data?.data;
   } catch (error) {
     return null;

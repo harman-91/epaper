@@ -6,8 +6,8 @@ import {
   IoBookmarkOutline,
   IoShareSocialOutline,
   IoGridOutline,
+  IoCloseCircle
 } from "react-icons/io5";
-import { BsBookmark } from "react-icons/bs";
 import { GoArrowSwitch } from "react-icons/go";
 import {
   HiOutlineMagnifyingGlassPlus,
@@ -18,6 +18,8 @@ import CitySelection from "../EpaperSwiper/Epaper/CitySelection";
 import CustomDropdown from "./customDropDown";
 import Bookmark from "../account/bookmark";
 import axios from "axios";
+import { MdOutlineSwipe, MdOutlineSwipeVertical } from "react-icons/md";
+import { dateBefore } from "../utility/CommonUtils";
 
 const token = {
   "epaper.jagran.com":
@@ -43,6 +45,8 @@ export default function FooterNewsPaper({
   userDetail,
   isZoom,
   toogleZoom,
+  changeVerticalScroll,
+  isVerticalScroll,
 }) {
   const [detail, setDetail] = useState({ bookmark: false });
   const [isThumbnailsVisible, setThumbnailsVisible] = useState(false);
@@ -123,7 +127,7 @@ export default function FooterNewsPaper({
           }
         }
       `}</style> */}
-      <footer className="footer">
+      <footer className="footer z-40">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -133,7 +137,7 @@ export default function FooterNewsPaper({
                     className="close-btn"
                     onClick={() => setThumbnailsVisible(false)}
                   >
-                    Close
+                    <IoCloseCircle style={{ width: 24, height: 24 }} />
                   </button>
                   {children}
                 </div>
@@ -143,7 +147,15 @@ export default function FooterNewsPaper({
           <nav className="footer-nav flex flex-wrap justify-center md:justify-start">
             {/* Date */}
             <div className="footer-nav-item">
-              <CustomDatePicker onDateChange={onDateChange} />
+              <CustomDatePicker
+                onDateChange={onDateChange}
+                minDate={dateBefore(
+                  userDetail?.subscription?.subscription_archive
+                    ?.feature_value_type,
+                  userDetail?.subscription?.subscription_archive?.feature_value
+                )}
+                maxDate={new Date()}
+              />
             </div>
 
             {/* All Pages */}
@@ -162,7 +174,9 @@ export default function FooterNewsPaper({
             </div>
 
             {/* Location */}
-            <div className={`footer-nav-item ${showCitySelection ? "active" : ""}`}>
+            <div
+              className={`footer-nav-item ${showCitySelection ? "active" : ""}`}
+            >
               <div id="locationButton" className="flex flex-col items-center">
                 <IoLocationOutline />
                 <div>
@@ -172,7 +186,7 @@ export default function FooterNewsPaper({
             </div>
 
             {/* Zoom */}
-            <div className="footer-nav-item">
+            {/* <div className="footer-nav-item">
               <a onClick={() => toogleZoom()} className="cursor-pointer">
                 {!isZoom ? (
                   <HiOutlineMagnifyingGlassPlus />
@@ -181,24 +195,33 @@ export default function FooterNewsPaper({
                 )}
                 <div>Zoom</div>
               </a>
-            </div>
+            </div> */}
 
             {/* Share - Desktop Only */}
             <div className="footer-nav-item desktop-only">
-              <a
+              <div
                 onClick={() => handleShare("facebook")}
                 className="cursor-pointer"
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
                 <IoShareSocialOutline />
                 <div>Share</div>
-              </a>
+              </div>
             </div>
 
             {/* Bookmark - Desktop Only */}
             <div className="footer-nav-item desktop-only">
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <BsBookmark />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <Bookmark
                   language={"en"}
                   articledata={{
@@ -216,11 +239,19 @@ export default function FooterNewsPaper({
             {/* Switch - Desktop Only */}
             <div className="footer-nav-item desktop-only">
               <a
-                onClick={() => handleShare("facebook")}
+                onClick={changeVerticalScroll}
                 className="cursor-pointer"
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <GoArrowSwitch />
+                {isVerticalScroll ? (
+                  <MdOutlineSwipeVertical />
+                ) : (
+                  <MdOutlineSwipe />
+                )}
                 <div>Switch</div>
               </a>
             </div>
@@ -230,15 +261,33 @@ export default function FooterNewsPaper({
               <div
                 className="cursor-pointer"
                 onClick={() => setIsMoreOpen(!isMoreOpen)}
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
                 <span className="text-xl">⋮</span>
                 <div>More</div>
               </div>
               {isMoreOpen && (
-                <div 
+                <div
                   className="absolute bottom-full mb-2 w-40 bg-white shadow-lg rounded-md py-2 border z-10"
-                  style={{ position: 'absolute', bottom: '100%', marginBottom: '8px', width: '160px', backgroundColor: 'white', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', borderRadius: '6px', paddingTop: '8px', paddingBottom: '8px', border: '1px solid #e5e7eb', zIndex: 10 }}
+                  style={{
+                    position: "absolute",
+                    bottom: "100%",
+                    marginBottom: "0",
+                    width: "160px",
+                    height: "150px",
+                    backgroundColor: "white",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "6px",
+                    paddingTop: "8px",
+                    paddingBottom: "8px",
+                    border: "1px solid #e5e7eb",
+                    zIndex: 10,
+                    alignItems: "flex-start",
+                  }}
                 >
                   <div
                     onClick={() => {
@@ -246,20 +295,39 @@ export default function FooterNewsPaper({
                       setIsMoreOpen(false);
                     }}
                     className="cursor-pointer"
-                    style={{ padding: '8px 16px', fontSize: '14px', display: 'flex', alignItems: 'center' }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    style={{
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.target.style.backgroundColor = "#f3f4f6")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.backgroundColor = "transparent")
+                    }
                   >
-                    <IoShareSocialOutline style={{ marginRight: '8px' }} />
+                    <IoShareSocialOutline style={{ marginRight: "8px" }} />
                     <span>Share</span>
                   </div>
-                  <div 
+                  <div
                     className="cursor-pointer"
-                    style={{ padding: '8px 16px', fontSize: '14px', display: 'flex', alignItems: 'center' }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    style={{
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.target.style.backgroundColor = "#f3f4f6")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.backgroundColor = "transparent")
+                    }
                   >
-                    <BsBookmark style={{ marginRight: '8px' }} />
                     <Bookmark
                       language={"en"}
                       articledata={{
@@ -270,19 +338,33 @@ export default function FooterNewsPaper({
                       }}
                       domainInfo={domainInfo}
                     />
-                    <span style={{ marginLeft: '4px' }}>Bookmark</span>
+                    <span style={{ marginLeft: "4px" }}>Bookmark</span>
                   </div>
                   <div
                     onClick={() => {
-                      handleShare("facebook");
+                      changeVerticalScroll();
                       setIsMoreOpen(false);
                     }}
                     className="cursor-pointer"
-                    style={{ padding: '8px 16px', fontSize: '14px', display: 'flex', alignItems: 'center' }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    style={{
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.target.style.backgroundColor = "#f3f4f6")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.backgroundColor = "transparent")
+                    }
                   >
-                    <GoArrowSwitch style={{ marginRight: '8px' }} />
+                    {isVerticalScroll ? (
+                      <MdOutlineSwipeVertical />
+                    ) : (
+                      <MdOutlineSwipe />
+                    )}
                     <span>Switch</span>
                   </div>
                 </div>
@@ -490,7 +572,7 @@ export default function FooterNewsPaper({
 //               <IoShareSocialOutline />
 //               <div>Share</div>
 //             </a>
-//           </div>          
+//           </div>
 //         </nav>
 //       </div>
 //       <CitySelection

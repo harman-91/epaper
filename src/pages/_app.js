@@ -7,6 +7,7 @@ import React, { Fragment } from "react";
 import CommonLayout from "@/component/layout/commonLayout";
 import { NextIntlClientProvider } from "next-intl";
 import { useRouter } from "next/router";
+import HeaderLayout from "@/component/layout/headerLayout";
 
 // Font configurations
 const archivo = Archivo({
@@ -23,13 +24,15 @@ function MyApp({ Component, pageProps }) {
     metadata = {},
     cities = [],
     // headerData = null,
-
     pageType,
+    domainInfo
   } = pageProps;
 
   let Layout = Fragment;
   if (pageType === "CommonLayout") {
     Layout = CommonLayout;
+  }else if(pageType==="HeaderLayout") {
+    Layout = HeaderLayout;
   }
 
   return (
@@ -90,7 +93,7 @@ function MyApp({ Component, pageProps }) {
 
       <div className={`${archivo.variable} `}>
       
-          <Layout    cities={cities}>
+          <Layout cities={cities} domainInfo={domainInfo}>
             <Component
               {...pageProps}
            

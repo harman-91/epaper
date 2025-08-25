@@ -142,7 +142,9 @@ const EpaperSubscribe = () => {
   const offsetMultiplier = isMobile ? 30 : 45;
   const fontSize = isMobile ? 'text-lg' : 'text-2xl';
   const categorySize = isMobile ? 'text-sm' : 'text-base';
-
+  const routetoplan=()=>{
+    window.location.href = "/subscription/plan";
+  }
   return (
     <>
       <div 
@@ -235,7 +237,7 @@ const EpaperSubscribe = () => {
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 leading-tight">
                   ई-पेपर को पढ़ने के लिए सब्सक्राइब करें।
                 </h2>
-                <button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-xl text-md shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out">
+                <button onClick={routetoplan} className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-xl text-md shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out">
                   सब्सक्राइब करें ₹1/दिन में
                 </button>
               </div>

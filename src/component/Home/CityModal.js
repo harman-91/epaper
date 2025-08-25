@@ -1,13 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { sendPersonalizedCategory, getPersonalizedCategory } from '@/services/personalizeCategoryService';
+import { useSelector } from "react-redux";
+import { genrateurl } from "@/component/utility/CommonUtils";
 
-export default function CityModal({ show, handleClose, selectedCities, setSelectedCities, favoriteCities }) {
+export default function CityModal({ show, handleClose, selectedCities, setSelectedCities, favoriteCities, editingCityIndex }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCities, setFilteredCities] = useState([]);
   const [activeLetter, setActiveLetter] = useState("All");
   const [citiesList, setCitiesList] = useState([]);
+  const [tempSelectedCities, setTempSelectedCities] = useState(selectedCities);
+  const userDetail = useSelector((state) => state.userData.user);
+  const isLoggedIn = useSelector((state) => state.userData.showLogin);
 
+  // Initialize tempSelectedCities when modal opens or selectedCities changes
+  useEffect(() => {
+    if (show) {
+      setTempSelectedCities(selectedCities);
+    }
+  }, [show, selectedCities]);
 
   // Transform favoriteCities prop to cities list when it changes
   useEffect(() => {
@@ -20,34 +32,25 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
   // Transform favoriteCities prop data to cities list with letters
   const transformApiDataToCitiesList = (apiData) => {
     const cities = [];
-    
+
     apiData.forEach(stateData => {
-      // Add main city
-      if (stateData.main_city && stateData.main_city.city_name) {
-        cities.push({
-          name: stateData.main_city.city_name,
-          code: stateData.main_city.code,
-          letter: stateData.main_city.city_name.charAt(0).toUpperCase(),
-          isMainCity: true,
-          state: stateData.state_name
-        });
-      }
-      
-      // Add other cities
-      if (stateData.cities && Array.isArray(stateData.cities)) {
-        stateData.cities.forEach(city => {
-          cities.push({
-            name: city.city_name,
-            code: city.code,
-            letter: city.city_name.charAt(0).toUpperCase(),
-            isMainCity: false,
-            state: stateData.state_name
-          });
+      if (stateData.regions && Array.isArray(stateData.regions)) {
+        stateData.regions.forEach(region => {
+          if (region.cities && Array.isArray(region.cities)) {
+            region.cities.forEach(city => {
+              cities.push({
+                name: city.city_name,
+                code: city.code,
+                letter: city.city_name.charAt(0).toUpperCase(),
+                isMainCity: false,
+                state: stateData.state_name
+              });
+            });
+          }
         });
       }
     });
-    
-    // Sort cities alphabetically
+
     return cities.sort((a, b) => a.name.localeCompare(b.name));
   };
 
@@ -56,33 +59,91 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
     let filtered = citiesList.filter(city =>
       city.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    
+
     if (activeLetter !== "All") {
       filtered = filtered.filter(city => city.letter === activeLetter);
     }
-    
+
     setFilteredCities(filtered);
   }, [searchTerm, activeLetter, citiesList]);
 
   const handleCitySelection = (cityName) => {
-    if (selectedCities.includes(cityName)) {
-      if (selectedCities.length > 2) {
-        setSelectedCities(selectedCities.filter((city) => city !== cityName));
-      }
+    // Check if the city is already selected
+    if (tempSelectedCities.includes(cityName)) {
+      // Unselect the city (remove it from tempSelectedCities)
+      setTempSelectedCities(tempSelectedCities.filter((city) => city !== cityName));
     } else {
-      if (selectedCities.length < 2) {
-        setSelectedCities([...selectedCities, cityName]);
+      // If in editing mode, replace the city at editingCityIndex
+      if (editingCityIndex !== null) {
+        const newTempSelectedCities = [...tempSelectedCities];
+        newTempSelectedCities[editingCityIndex] = cityName;
+        setTempSelectedCities(newTempSelectedCities.filter(city => city)); // Remove any null/empty entries
       } else {
-        const cityToReplace = window.confirm(
-          `Replace "${selectedCities[0]}" with "${cityName}"? Click OK to replace, Cancel to replace "${selectedCities[1]}".`
-        );
-        if (cityToReplace) {
-          setSelectedCities([cityName, selectedCities[1]]);
+        // Normal selection logic (max 2 cities)
+        if (tempSelectedCities.length < 2) {
+          setTempSelectedCities([...tempSelectedCities, cityName]);
         } else {
-          setSelectedCities([selectedCities[0], cityName]);
+          const cityToReplace = window.confirm(
+            `Replace "${tempSelectedCities[0]}" with "${cityName}"? Click OK to replace, Cancel to replace "${tempSelectedCities[1]}".`
+          );
+          if (cityToReplace) {
+            setTempSelectedCities([cityName, tempSelectedCities[1]]);
+          } else {
+            setTempSelectedCities([tempSelectedCities[0], cityName]);
+          }
         }
       }
     }
+  };
+
+  // Handle Confirm button click
+  const handleConfirm = async () => {
+    try {
+      // Get city codes for the selected cities
+      const selectedCityCodes = tempSelectedCities
+        .map(cityName => {
+          const city = citiesList.find(c => c.name === cityName);
+          return city ? city.code : null;
+        })
+        .filter(code => code !== null);
+
+      await sendPersonalizedCategory({
+        domain_url: "epaper.naidunia.com",
+        ids: selectedCityCodes,
+        token: userDetail.auth_token
+      });
+
+      const personalizedData = await getPersonalizedCategory({
+        domain_url: "epaper.naidunia.com",
+        token: userDetail.auth_token
+      });
+
+      // City codes from API
+      const cityCodesFromApi = personalizedData?.data?.epaperPersonalizationData?.map(item => item.selected_id) || selectedCityCodes;
+
+      const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      cityCodesFromApi.forEach(code => {
+        const city = citiesList.find(c => c.code == code);
+        const citySlug = city?.name.toLowerCase().replace(/\s+/g, '-') || 'default-city';
+
+        const generatedUrl = genrateurl({
+          date: currentDate,
+          cityCode: code,
+          citySlug: citySlug,
+        });
+      });
+
+      // Update parent state with selected cities
+      setSelectedCities(tempSelectedCities);
+      handleClose();
+    } catch (error) {
+      handleClose();
+    }
+  };
+
+  const handleCancel = () => {
+    setTempSelectedCities(selectedCities); // Reset temp state
+    handleClose();
   };
 
   // Get unique letters from cities list
@@ -105,7 +166,9 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
         {/* Modal Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
           <h5 className="text-lg font-semibold text-gray-800">
-            Change City: <span>{selectedCities[0] || "None"}</span>
+            {editingCityIndex !== null
+              ? `Change City: ${tempSelectedCities[editingCityIndex] || "None"}`
+              : `Select Cities (Max 2)`}
           </h5>
           <input
             type="text"
@@ -113,6 +176,7 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style={{ border: '#aaa solid 1px' }}
           />
         </div>
 
@@ -120,11 +184,10 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
         <div className="flex flex-wrap justify-center gap-1 p-2 border-b border-gray-100">
           <button
             onClick={() => setActiveLetter("All")}
-            className={`px-2 py-1 text-sm font-medium rounded ${
-              activeLetter === "All" 
-                ? "bg-blue-500 text-white" 
-                : "text-gray-700 hover:bg-blue-500 hover:text-white"
-            }`}
+            className={`px-1 py-1 text-sm font-medium rounded ${activeLetter === "All"
+              ? "bg-blue-500 text-white"
+              : "text-gray-700 hover:bg-blue-500 hover:text-white"
+              }`}
           >
             All
           </button>
@@ -132,11 +195,10 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
             <button
               key={letter}
               onClick={() => setActiveLetter(letter)}
-              className={`px-2 py-1 text-sm font-medium rounded ${
-                activeLetter === letter 
-                  ? "bg-blue-500 text-white" 
-                  : "text-gray-700 hover:bg-blue-500 hover:text-white"
-              }`}
+              className={`px-1 py-1 text-sm font-medium rounded ${activeLetter === letter
+                ? "bg-blue-500 text-white"
+                : "text-gray-700 hover:bg-blue-500 hover:text-white"
+                }`}
             >
               {letter}
             </button>
@@ -153,35 +215,25 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
             <p className="text-gray-600 text-center">No cities found</p>
           ) : (
             [...new Set(filteredCities.map(city => city.letter))].sort().map(letter => (
-              <div key={letter} className="mb-10 flex flex-wrap gap-5">
+              <div key={letter} className="mb-2 flex flex-wrap">
                 <h5 className="w-full text-base font-bold text-gray-900">{letter}</h5>
                 {filteredCities
                   .filter(city => city.letter === letter)
                   .map(city => (
-                    <label
+                    <div
                       key={`${city.name}-${city.code}`}
-                      className={`flex items-center p-2 cursor-pointer ${
-                        selectedCities.includes(city.name) ? "bg-gray-100 rounded" : ""
-                      }`}
+                      className={`flex items-center p-2 cursor-pointer rounded ${tempSelectedCities.includes(city.name) ? "bg-blue-100" : "hover:bg-gray-100"}`}
+                      onClick={() => handleCitySelection(city.name)}
                     >
-                      <div className="round flex items-center text-sm">
-                        <span className="flex flex-col">
-                          <span className="font-medium">{city.name}</span>
-
-                        </span>
-                        <input
-                          type="checkbox"
-                          id={`checkbox-${city.name}-${city.code}`}
-                          checked={selectedCities.includes(city.name)}
-                          onChange={() => handleCitySelection(city.name)}
-                          className="hidden"
-                        />
-                        <label
-                          htmlFor={`checkbox-${city.name}-${city.code}`}
-                          className="ml-2 w-4 h-4 border border-gray-300 rounded-full cursor-pointer relative"
-                        ></label>
-                      </div>
-                    </label>
+                      <input
+                        type="checkbox"
+                        id={`checkbox-${city.name}-${city.code}`}
+                        checked={tempSelectedCities.includes(city.name)}
+                        onChange={() => handleCitySelection(city.name)}
+                        className="mr-2 h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium">{city.name}</span>
+                    </div>
                   ))}
               </div>
             ))
@@ -191,18 +243,20 @@ export default function CityModal({ show, handleClose, selectedCities, setSelect
         {/* Modal Footer */}
         <div className="text-center p-4 border-t border-gray-200">
           <p className="text-sm text-gray-600 mb-2">
-            Click to make <span className="font-medium">{selectedCities[0] || "None"}</span> your default city.
+            {editingCityIndex !== null
+              ? `Select: ${tempSelectedCities[editingCityIndex] || "None"} to replace`
+              : `Selected: ${tempSelectedCities.join(", ") || "None"}`}
           </p>
           <div className="flex justify-center gap-2">
             <button
               className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition min-w-[120px]"
-              onClick={handleClose}
+              onClick={handleConfirm}
             >
               Confirm
             </button>
             <button
               className="px-4 py-2 bg-gray-100 text-gray-800 border border-gray-300 rounded hover:bg-red-500 hover:text-white hover:border-red-500 transition min-w-[120px]"
-              onClick={handleClose}
+              onClick={handleCancel}
             >
               Cancel
             </button>

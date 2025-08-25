@@ -40,9 +40,12 @@ const DetailComponent = ({
   const [currentSlideIndex, setCurrentSlideIndex] = useState(Math.max(0, pageno - 1));
   const [isZoom, setIsZoom] = useState(false);
   const [showModal, setShowModal] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [starttimer, setStartTimer] = useState(false);
-
+  const [isVerticalScroll, setIsVerticalScroll] = useState(false);
+  const changeVerticalScroll = (value) => {
+    setIsVerticalScroll(value);
+  };
   const router = useRouter();
   const { user: userDetail, isLoading: userLoading, isAuthenticated } = useSelector(
     (state) => state.userData
@@ -238,6 +241,8 @@ const DetailComponent = ({
         userDetail={userDetail}
         toogleZoom={toggleZoom}
         isZoom={isZoom}
+        changeVerticalScroll={changeVerticalScroll}
+        isVerticalScroll={isVerticalScroll}
       >
         <EpaperThumbnailSwiper
           images={images}

@@ -8,10 +8,10 @@ import LoginModal from "@/component/account/loginmodel";
 
 
 
-export default function CommonLayout({ children ,cities}) {
+export default function CommonLayout({ children ,cities, domainInfo}) {
   return (
     <>
-      <Header cities={cities} />
+      <Header cities={cities} domainInfo={domainInfo} />
       <Suspense>
         <AnalyticsCommonScript />
       </Suspense>

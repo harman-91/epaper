@@ -117,3 +117,12 @@ export const withHeaderProps =
       notFound: true,
     };
   };
+export const dateBefore = (type, value) => {
+  const date = new Date();
+  if (type == "day") {
+    date.setDate(date.getDate() - value);
+  } else {
+    date.setMonth(date.getMonth() - value);
+  }
+  return date;
+};

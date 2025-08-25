@@ -52,13 +52,12 @@ const Bookmark = ({
         summary: articledata.summary,
         siteName: token[domainInfo.domainId],
         ssouid: val.user_id,
-        domainOrigin: `https://${process.env.DOMAIN}`,
+        domainOrigin: domainInfo.url,
         artid: articledata.artid,
         language: document?.documentElement?.lang,
         domain: domainInfo.domainId,
       };
 
-      //console.log("body", body);
       //https://imgeng.jagran.com/images/2025/04/30/article/image/PM-MODI-PUTIN-1746004137267.jpg
       axios.post("/api/comment/bookmark-add", body);
       if (addBookmark)
@@ -76,13 +75,12 @@ const Bookmark = ({
           categoryUrl: "",
           projectid: 1003,
           ssouid: "",
-          domainOrigin: `https://${process.env.DOMAIN}`,
+          domainOrigin: domainInfo.url,
           artid: articledata.artid,
           language: document?.documentElement?.lang,
           bookmark: true,
         });
-    } catch (err) {
-    }
+    } catch (err) {}
   };
   const deleteBookmark = async (val) => {
     try {

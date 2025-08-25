@@ -31,7 +31,6 @@ export const fetchUserProfile = createAsyncThunk(
       const domainInfo = getDomain(host);
       // const wait = await new Promise((resolve) => {
       //   setTimeout(() => {
-      //     console.log("waited for 10 seconds");
       //     resolve();
       //   }, 10000);
       // });
@@ -157,7 +156,6 @@ export const fetchUserProfile = createAsyncThunk(
 
       return userObject;
     } catch (err) {
-      console.log("eee", err);
       return rejectWithValue(err.response?.data || err.message);
     }
   }

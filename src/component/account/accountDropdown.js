@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/store/reduxHooks";
 import { logoutUserProfile } from "@/store/slice/userSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import GlobalLink from "../global/GlobalLink";
 
 const DeviceDetect = (setIsMobile) => {
   const userAgent = navigator.userAgent;
@@ -103,25 +104,25 @@ function MyAccountDropdown(props) {
 
           <ul className="text-sm">
             <li>
-              <a
+              <GlobalLink
                 href="/manage-profile"
                 className="block px-4 py-3 font-medium hover:bg-gray-100"
               >
                 My Account
-              </a>
+              </GlobalLink>
             </li>
             <li>
-              <a href="/bookmark" className="block px-4 py-3 hover:bg-gray-100">
+              <GlobalLink href="/bookmark" className="block px-4 py-3 hover:bg-gray-100">
                 Bookmark
-              </a>
+              </GlobalLink>
             </li>
             <li>
-              <a
+              <GlobalLink
                 href="/edit-profile"
                 className="block px-4 py-3 hover:bg-gray-100"
               >
                 Edit Profile
-              </a>
+              </GlobalLink>
             </li>
           </ul>
 

@@ -5,7 +5,6 @@ import UpdateMobile from "./updateMobile";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLoginBtn from "./googleLogin";
 import { useDispatch } from "react-redux";
-
 import Image from "next/legacy/image";
 import {
   updateUserProfile,
@@ -20,9 +19,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { saveUserData } from "@/store/slice/userSlice";
 import variable from "@/component/utility/variable";
 import { setCookie } from "@/component/utility/cookie";
+import { getAccountText } from "../meta/accountMeta";
 
 function EditProfile(props) {
-  const [profile, setProfile] = useState(props.profileData);
+  const { profileData, auth, domainInfo } = props;
+  const [profile, setProfile] = useState(profileData);
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
   const [city, setCity] = useState([]);
@@ -33,9 +34,11 @@ function EditProfile(props) {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userDetail = useAppSelector((state) => state.userData.user);
-  const searchParams = new useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const text = getAccountText(domainInfo?.domainId);
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -44,93 +47,76 @@ function EditProfile(props) {
     setIsModalOpen(false);
   };
   let logout = false;
-  ///        "http://stg-hf-api.jnm.digital/api/v1/customer/upload/profile-picture",
 
   const uploadProfile = async (file) => {
     try {
       let bodyFormData = new FormData();
       bodyFormData.append("profile_picture", file);
       const data = await updateUserProfilePicture({
-        auth_token: props.auth,
+        auth_token: auth,
         bodyFormData,
       });
 
       if (data.code == 200) {
-        setProfile((prev) => {
-          return {
-            ...prev,
-            profile_picture: data?.data?.profileData?.profile_picture,
-          };
-        });
+        setProfile((prev) => ({
+          ...prev,
+          profile_picture: data?.data?.profileData?.profile_picture,
+        }));
       }
     } catch (err) {
-      setError("Something Went Wrong");
+      setError(text.somethingWentWrong);
     }
   };
 
   const onChangeHandler = (e) => {
-
     if (e.target.name == "mobile_no" && e.target.value.length >= 11) {
       return;
     }
     if (e.target.name == "profile_picture") {
       uploadProfile(e.target.files[0]);
-
       return;
     }
     if (e.target.name == "radio-group") {
-      setProfile((prev) => {
-        return { ...prev, gender: e.target.value };
-      });
+      setProfile((prev) => ({ ...prev, gender: e.target.value }));
       return;
     }
     if (e.target.name == "country") {
       getStateList(e.target.value);
-      setProfile((prev) => {
-        return {
-          ...prev,
-          country_id: e.target.value,
-          state_id: "",
-          city_id: "",
-        };
-      });
-
+      setProfile((prev) => ({
+        ...prev,
+        country_id: e.target.value,
+        state_id: "",
+        city_id: "",
+      }));
       return;
     }
     if (e.target.name == "state") {
       getCityList(e.target.value);
-      setProfile((prev) => {
-        return { ...prev, state_id: e.target.value, city_id: "" };
-      });
-
+      setProfile((prev) => ({ ...prev, state_id: e.target.value, city_id: "" }));
       return;
     }
     if (e.target.name == "city") {
-      setProfile((prev) => {
-        return { ...prev, city_id: e.target.value };
-      });
-
+      setProfile((prev) => ({ ...prev, city_id: e.target.value }));
       return;
     }
     if (
       (e.target.name == "first_name" || e.target.name == "last_name") &&
-     !isNaN(parseInt(e.target.value.slice(-1))) 
+      !isNaN(parseInt(e.target.value.slice(-1)))
     ) {
       return;
     }
 
-    setProfile((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
+    setProfile((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   function containsNumber(value) {
     return /\d/.test(value);
   }
+
   const updateProfileHandler = async () => {
     try {
       let body = {
         date_of_birth: profile.date_of_birth,
-        // email: profile.email,
         first_name: profile.first_name || "",
         last_name: profile.last_name || "",
         gender: profile.gender,
@@ -146,7 +132,7 @@ function EditProfile(props) {
       }
       if (body.email && !body.mobile_no) delete body.mobile_no;
       if (!body.email && body.mobile_no) delete body.email;
-      const data = await updateUserProfile({ auth_token: props.auth, body });
+      const data = await updateUserProfile({ auth_token: auth, body });
 
       if (data.code == 200) {
         window.location.href = "/manage-profile";
@@ -159,19 +145,20 @@ function EditProfile(props) {
         }, {});
         setErrorObj(result);
       } else {
-        setError(data.message ? data.message : "Something Went Wrong");
+        setError(data.message ? data.message : text.somethingWentWrong);
       }
     } catch (err) {
-      setError("Something Went Wrong");
+      setError(text.somethingWentWrong);
     }
   };
+
   const options = {
     year: "numeric",
     month: "long",
   };
+
   const onUpdateEmail = () => {
     setErrorObj({ ...errorObj, email: null });
-
     window.location.reload();
   };
 
@@ -179,9 +166,11 @@ function EditProfile(props) {
     window.location.reload();
     setUpdateMobile(false);
   };
+
   const onUpdateEmailError = (msg) => {
     setErrorObj({ ...errorObj, email: msg });
   };
+
   const getCountryList = async () => {
     try {
       const { data: country } = await axios(
@@ -192,6 +181,7 @@ function EditProfile(props) {
       }
     } catch (err) {}
   };
+
   const getStateList = async (id) => {
     try {
       const { data: state } = await axios(
@@ -204,6 +194,7 @@ function EditProfile(props) {
       console.log(err);
     }
   };
+
   const getCityList = async (id) => {
     try {
       const { data: state } = await axios(
@@ -238,8 +229,6 @@ function EditProfile(props) {
 
         dispatch(saveUserData(obj));
         setCookie(variable.LOGIN_DETAIL, btoa(JSON.stringify(obj)), 365);
-        // router.push(pathname + "?login=true", undefined, { shallow: true });
-
       }
     }
     if (profile.country_name) {
@@ -257,21 +246,14 @@ function EditProfile(props) {
   const [isMaleEnabled, setIsMaleEnabled] = useState(false);
   const [isFemaleEnabled, setIsFemaleEnabled] = useState(false);
   const handleToggle = (genderValue) => {
-    setProfile((prev) => {
-      return { ...prev, gender: prev.gender != genderValue ? genderValue : "" };
-    });
+    setProfile((prev) => ({
+      ...prev,
+      gender: prev.gender != genderValue ? genderValue : "",
+    }));
   };
-  const handleFemaleToggle = () => {
-    setIsMaleEnabled(false);
-    setIsFemaleEnabled(true);
-  };
-  const handleVerify = (number) => {
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   mobile: number,
-    // }));
-    window.location.reload();
 
+  const handleVerify = (number) => {
+    window.location.reload();
     setIsModalOpen(false);
   };
 
@@ -279,7 +261,7 @@ function EditProfile(props) {
     <>
       <div className="relative isolate bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2">
-          <div className="relative pb-14 pt-24 px-7 sm:pt-32 lg:static  lg:py-48">
+          <div className="relative pb-14 pt-24 px-7 sm:pt-32 lg:static lg:py-48">
             <div className="mx-auto w-full lg:mx-0">
               <div className="absolute inset-y-0 left-0 -z-10 w-full overflow-hidden bg-gray-100 ring-1 ring-gray-900/10 lg:w-1/2">
                 <svg
@@ -287,7 +269,6 @@ function EditProfile(props) {
                   className="absolute inset-0 size-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
                 >
                   <defs>
-                    {" "}
                     <pattern
                       x="100%"
                       y={-1}
@@ -296,21 +277,11 @@ function EditProfile(props) {
                       height={200}
                       patternUnits="userSpaceOnUse"
                     >
-                      {" "}
-                      <path d="M130 200V.5M.5 .5H200" fill="none" />{" "}
-                    </pattern>{" "}
+                      <path d="M130 200V.5M.5 .5H200" fill="none" />
+                    </pattern>
                   </defs>
-                  <rect
-                    fill="white"
-                    width="100%"
-                    height="100%"
-                    strokeWidth={0}
-                  />
-                  <svg
-                    x="100%"
-                    y={-1}
-                    className="overflow-visible fill-gray-50"
-                  >
+                  <rect fill="white" width="100%" height="100%" strokeWidth={0} />
+                  <svg x="100%" y={-1} className="overflow-visible fill-gray-50">
                     <path d="M-470.5 0h201v201h-201Z" strokeWidth={0} />
                   </svg>
                   <rect
@@ -324,15 +295,15 @@ function EditProfile(props) {
               <div className="flex justify-between pr-10 mb-12">
                 <div className="xl:col-span-2">
                   <h2 className="text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-                    {props?.profileData?.first_name}{" "}
-                    {props?.profileData?.last_name}
+                    {profileData?.first_name} {profileData?.last_name}
                   </h2>
-                  {props?.profileData?.member_since && (
+                  {profileData?.member_since && (
                     <small className="text-xs/6 text-gray-500">
-                      Joined since{" "}
-                      {new Date(
-                        props?.profileData?.member_since
-                      ).toLocaleDateString("en-Us", options)}
+                      {text.joinedSince}{" "}
+                      {new Date(profileData?.member_since).toLocaleDateString(
+                        "en-US",
+                        options
+                      )}
                     </small>
                   )}
                   <dl className="mt-10 space-y-4 text-base/7 text-gray-600">
@@ -346,25 +317,13 @@ function EditProfile(props) {
                       </dt>
                       <dd>
                         {profile.is_mobile_verified ? (
-                          <>
-                            {/* 
-                        <input
-                          type="number"
-                          maxlength="10"
-                          name="mobile_no"
-                          value={profile.mobile_no}
-                          onChange={onChangeHandler}
-                          disabled={profile.is_mobile_verified}
-                        />
-                      */}
-                            <div className="font-lg">{profile.mobile_no}</div>
-                          </>
+                          <div className="font-lg">{profile.mobile_no}</div>
                         ) : (
                           <button
                             onClick={handleOpenModal}
                             className="rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                           >
-                            + Add your mobile number
+                            {text.addMobileNumber}
                           </button>
                         )}
                       </dd>
@@ -385,7 +344,7 @@ function EditProfile(props) {
                             <GoogleLoginBtn
                               onSuccess={onUpdateEmail}
                               onError={onUpdateEmailError}
-                              auth={props.auth}
+                              auth={auth}
                               size="large"
                             />
                           </GoogleOAuthProvider>
@@ -449,7 +408,7 @@ function EditProfile(props) {
                     htmlFor="first-name"
                     className="block text-xs font-semibold text-gray-900 uppercase truncate"
                   >
-                    First Name
+                    {text.firstName}
                   </label>
                   <div className="mt-2.5">
                     <input
@@ -472,7 +431,7 @@ function EditProfile(props) {
                     htmlFor="last-name"
                     className="block text-xs font-semibold text-gray-900 uppercase truncate"
                   >
-                    Last Name
+                    {text.lastName}
                   </label>
                   <div className="mt-2.5">
                     <input
@@ -490,21 +449,20 @@ function EditProfile(props) {
                     )}
                   </div>
                 </div>
-                <div className="sm:col-span-2" >
+                <div className="sm:col-span-2">
                   <label
                     htmlFor="birthday"
                     className="block text-xs font-semibold text-gray-900 uppercase truncate"
                   >
-                    Birthday
+                    {text.birthday}
                   </label>
-                  <div className="mt-2.5"   >
+                  <div className="mt-2.5">
                     <input
                       type="date"
                       id="birthday"
                       name="date_of_birth"
                       value={profile.date_of_birth || ""}
                       onChange={onChangeHandler}
-                     
                       max={new Date().toISOString().split("T")[0]}
                       className="block w-full rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-gray-600"
                     />
@@ -520,7 +478,7 @@ function EditProfile(props) {
                     htmlFor="gender"
                     className="block text-xs font-semibold text-gray-900 uppercase truncate"
                   >
-                    Gender
+                    {text.gender}
                   </label>
                   <div className="mt-2.5 flex items-center gap-x-4 flex-wrap">
                     <Field className="flex items-center">
@@ -536,7 +494,7 @@ function EditProfile(props) {
                       </Switch>
                       <Label as="span" className="ml-3 text-sm">
                         <span className="text-xs uppercase font-semibold text-gray-900">
-                          Male
+                          {text.male}
                         </span>
                       </Label>
                     </Field>
@@ -553,7 +511,7 @@ function EditProfile(props) {
                       </Switch>
                       <Label as="span" className="ml-3 text-sm">
                         <span className="text-xs uppercase font-semibold text-gray-900">
-                          Female
+                          {text.female}
                         </span>
                       </Label>
                     </Field>
@@ -570,7 +528,7 @@ function EditProfile(props) {
                       htmlFor="country"
                       className="block text-xs font-semibold text-gray-900 uppercase truncate"
                     >
-                      Country / Region
+                      {text.country}
                     </label>
                     <div className="mt-2.5">
                       <select
@@ -580,7 +538,7 @@ function EditProfile(props) {
                         className="block w-full rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-gray-600"
                       >
                         <option value="" title="">
-                          Select a country
+                          {text.selectCountry}
                         </option>
                         {country.map((el) => (
                           <option key={el.id} value={el.id} title={el.name}>
@@ -600,7 +558,7 @@ function EditProfile(props) {
                       htmlFor="state"
                       className="block text-xs font-semibold text-gray-900 uppercase truncate"
                     >
-                      State
+                      {text.state}
                     </label>
                     <div className="mt-2.5">
                       <select
@@ -610,7 +568,7 @@ function EditProfile(props) {
                         className="block w-full rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-gray-600"
                       >
                         <option value="" title="">
-                          Select a State
+                          {text.selectState}
                         </option>
                         {state.map((el) => (
                           <option key={el.id} value={el.id} title={el.name}>
@@ -630,7 +588,7 @@ function EditProfile(props) {
                       htmlFor="city"
                       className="block text-xs font-semibold text-gray-900 uppercase truncate"
                     >
-                      City
+                      {text.city}
                     </label>
                     <div className="mt-2.5">
                       <select
@@ -640,7 +598,7 @@ function EditProfile(props) {
                         className="block w-full rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-gray-600"
                       >
                         <option value="" title="">
-                          Select a city
+                          {text.selectCity}
                         </option>
                         {city.map((el) => (
                           <option key={el.id} value={el.id} title={el.name}>
@@ -663,7 +621,7 @@ function EditProfile(props) {
                   onClick={updateProfileHandler}
                   className="rounded-md bg-red-600 px-6 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                 >
-                  Save Information
+                  {text.saveInformation}
                 </button>
               </div>
               <div
@@ -672,13 +630,13 @@ function EditProfile(props) {
               >
                 <div className="text-lg font-semibold mb-0">
                   <div className="flex justify-between text-red-500 text-sm items-center group">
-                    Delete Your Account
+                    {text.deleteAccount}
                     <span className="w-2 h-2 border-t-2 border-r-2 border-red-400 rotate-45 mt-1 group-hover:border-black"></span>
                   </div>
                 </div>
                 <div className="mt-0">
                   <p className="text-xs text-gray-400">
-                    Delete all information associated with this account.
+                    {text.deleteAccountPrompt}
                   </p>
                 </div>
               </div>
@@ -691,7 +649,7 @@ function EditProfile(props) {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onVerify={handleVerify}
-        token={props?.auth}
+        token={auth}
       />
       <div id="mobile-root"></div>
     </>

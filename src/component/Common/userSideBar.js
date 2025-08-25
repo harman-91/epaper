@@ -7,16 +7,83 @@ import {
   UserIcon,
   UserPlusIcon,
   XMarkIcon,
+  ChatBubbleOvalLeftEllipsisIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-export default function UserSideBar({ toogleShow, userDetail, logout }) {
+import GloabalLink from "../global/Link";
+const menuItems = [
+  {
+    href: "/manage-profile",
+    label: "माई प्रोफ़ाइल",
+    icon: UserIcon,
+  },
+  {
+    href: "/bookmark",
+    label: "बुकमार्क्स",
+    icon: BookmarkIcon,
+  },
+  {
+    href: "/edit-profile",
+    label: "अपडेट प्रोफ़ाइल",
+    icon: UserPlusIcon,
+  },
+  {
+    href: "/subscription-history",
+    label: "सब्सक्रिप्शन डिटेल्स",
+    icon: UserPlusIcon,
+  },
+  {
+    href: "/support",
+    label: "सपोर्ट",
+    icon: UserPlusIcon,
+  },
+  {
+    label: "लॉग आउट",
+    icon: LockClosedIcon,
+    isButton: true,
+  },
+];
+const menuItemsPu = [
+  {
+    href: "/manage-profile",
+    label: "My Profile",
+    icon: UserIcon,
+  },
+  {
+    href: "/bookmark",
+    label: "Bookmarks",
+    icon: BookmarkIcon,
+  },
+  {
+    href: "/edit-profile",
+    label: "Update Profile",
+    icon: UserPlusIcon,
+  },
+  {
+    href: "/subscription-history",
+    label: "Subscription Details",
+    icon: UserPlusIcon,
+  },
+  {
+    href: "/support",
+    label: "Support",
+    icon: UserPlusIcon,
+  },
+  {
+    label: "Log Out",
+    icon: LockClosedIcon,
+    isButton: true,
+  },
+];
+export default function UserSideBar({ toogleShow, userDetail, logout,domainInfo }) {
   const showUserBar = useAppSelector((state) => state.globalData.showUserBar);
   const dispatch = useAppDispatch();
-
+  const menu=domainInfo?.domainId=='epaper.punjabijagran.com'?menuItemsPu:menuItems;
   const toogleUserSidebar = () => {
     dispatch(toggleUserBar());
   };
+
   return (
     <div
       className={`fixed inset-0 z-[60]   ${
@@ -85,7 +152,37 @@ export default function UserSideBar({ toogleShow, userDetail, logout }) {
             </div>
             <div className="">
               <ul className="list-none">
-                <li className="py-4 border-b border-slate-100 px-8">
+                {menu.map((item, index) => (
+                  <li
+                    key={item.label}
+                    className={`py-4 border-b border-slate-100 px-8 ${
+                      item.isButton ? "bg-slate-50" : ""
+                    }`}
+                  >
+                    {item.isButton ? (
+                      <button
+                        onClick={() => {
+                          logout(userDetail.auth_token);
+                          toogleUserSidebar();
+                        }}
+                        className="text-gray-900 hover:text-red-700 text-xs uppercase font-semibold inline-flex items-center"
+                      >
+                        <item.icon className="size-5 mr-2" />
+                        {item.label}
+                      </button>
+                    ) : (
+                      <GloabalLink
+                        href={item.href}
+                        className="text-gray-900 hover:text-red-700 text-xs uppercase font-semibold inline-flex items-center"
+                        onClick={toogleUserSidebar}
+                      >
+                        <item.icon className="size-5 mr-2" />
+                        {item.label}
+                      </GloabalLink>
+                    )}
+                  </li>
+                ))}
+                {/* <li className="py-4 border-b border-slate-100 px-8">
                   <Link
                     href="/manage-profile"
                     className="text-gray-900 hover:text-red-700  text-xs uppercase font-semibold inline-flex items-center"
@@ -115,6 +212,16 @@ export default function UserSideBar({ toogleShow, userDetail, logout }) {
                     Edit Profile
                   </Link>
                 </li>
+                <li className="py-4 border-b border-slate-100 px-8">
+                  <Link
+                    href="/Support"
+                    className="text-gray-900 hover:text-red-700  text-xs uppercase font-semibold inline-flex items-center"
+                    onClick={toogleShow}
+                  >
+                    <ChatBubbleOvalLeftEllipsisIcon className="size-5 mr-2" />
+                    Support
+                  </Link>
+                </li>                
                 <li className="py-4 bg-slate-50 px-8">
                   <button
                     onClick={() => {
@@ -126,7 +233,7 @@ export default function UserSideBar({ toogleShow, userDetail, logout }) {
                     <LockClosedIcon className="size-5 mr-2" />
                     Log Out
                   </button>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

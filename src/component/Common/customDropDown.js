@@ -27,7 +27,7 @@ const CustomDropdown = ({ options, onSelect }) => {
 
   const handleSelect = (option) => {
     setSelectedOption(option);
-  //  onSelect(option); // Pass the entire option object to the parent
+    onSelect(option); // Pass the entire option object to the parent
     setIsOpen(false);
     setSearchTerm("");
   };

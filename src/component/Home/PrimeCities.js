@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { IoShareSocialOutline } from "react-icons/io5";
 import { GoShareAndroid } from "react-icons/go";
 import { genrateurl } from "../utility/CommonUtils";
+import GlobalLink from "../global/GlobalLink";
 
 export default function PrimeCities({ currentCities,cities }) {
   // Flatten all cities from currentCities prop
@@ -15,7 +15,7 @@ export default function PrimeCities({ currentCities,cities }) {
         <div className="mb-4">
           <h2 className="text-2xl font-bold text-gray-800">प्रमुख शहर</h2>
         </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
           {cities.map((city, index) => {
             const today = new Date();
             const year = today.getFullYear();
@@ -28,10 +28,10 @@ export default function PrimeCities({ currentCities,cities }) {
 
             const url = genrateurl({ date: formattedDate, cityCode, citySlug });
               return (
-                <a href={url} key={city.city_code  || index}>
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow px-5 py-4 relative border">
+                <GlobalLink href={url} key={city.city_code  || index}>
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow px-3 md:px-5 py-2 md:py-4 relative border">
                     <div className="flex items-center justify-between pb-2">
-                        <span className="text-lg font-semibold text-gray-900">{city.city_name}</span>
+                        <span className="text-md md:text-lg font-semibold text-gray-900 capitalize">{city.city_name}</span>
                         <button className="p-1 hover:bg-gray-100 rounded">
                             <GoShareAndroid />
                         </button>
@@ -51,7 +51,7 @@ export default function PrimeCities({ currentCities,cities }) {
                         </div>                  
                     </div>
                   </div>
-                </a>
+                </GlobalLink>
               );
             })}
           </div>

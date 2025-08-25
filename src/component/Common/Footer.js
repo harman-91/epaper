@@ -1,6 +1,7 @@
 "use Client"
 
 import React from 'react'
+import GlobalLink from '../global/GlobalLink'
 
 export default function Footer() {
   return (
@@ -16,13 +17,13 @@ export default function Footer() {
             <div className="row justify-content-center">
                 <div className="col-12 col-lg-8">
                     <nav className="footer-main-nav">
-                        <a href="#">About Us</a>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms and Conditions</a>
-                        <a href="#">Contact Us</a>
-                        <a href="#">Support</a>
-                        <a href="#">Faq</a>
-                        <a href="#">Refund Policy</a>                                                 
+                        <GlobalLink href="#">About Us</GlobalLink>
+                        <GlobalLink href="#">Privacy Policy</GlobalLink>
+                        <GlobalLink href="#">Terms and Conditions</GlobalLink>
+                        <GlobalLink href="#">Contact Us</GlobalLink>
+                        <GlobalLink href="#">Support</GlobalLink>
+                        <GlobalLink href="#">Faq</GlobalLink>
+                        <GlobalLink href="#">Refund Policy</GlobalLink>                                                 
                     </nav>
                     <div className="copyright">
                         <p>Copyright © 2025 Jagran Prakashan Limited.</p>

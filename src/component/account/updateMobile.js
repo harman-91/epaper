@@ -141,13 +141,11 @@ const UpdateMobile = ({ showModal, token, onCloseModal, onClose }) => {
         setMobileOption({ ...mobileOption, error: "Something went wrong" });
       }
     } catch (err) {
-      console.log("_",err)
       setMobileOption({ ...mobileOption, error: "Something went wrong" });
     }
   };
   const onVerifyOtp = async () => {
     try {
-      console.log("verify otp", mobileOption.otp);
       if (!mobileOption.otp) {
         return setMobileOption({
           ...mobileOption,
@@ -235,7 +233,6 @@ const UpdateMobile = ({ showModal, token, onCloseModal, onClose }) => {
         setMobileOption({ ...mobileOption, error_otp: "Wrong OTP" });
       }
     } catch (err) {
-      console.log("resend otp error", err);
       setMobileOption({ ...mobileOption, error_otp: "Wrong OTP" });
     }
   };

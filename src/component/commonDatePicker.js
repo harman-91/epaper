@@ -8,7 +8,6 @@ const CommonDatePicker = ({ onDateChange, defaultDate = new Date() ,displayForma
     endDate: null,
   });
   
-  console.log("defaultDate", defaultDate);
 
   // Set default date on mount or when defaultDate changes
   useEffect(() => {

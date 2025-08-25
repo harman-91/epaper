@@ -1,8 +1,12 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import PropTypes from "prop-types";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import FooterNewsPaper from "@/component/Common/FooterNewspaper";
-import EpaperLarge from "@/component/EpaperSwiper/EpaperLargeSwiper";
 import EpaperThumbnailSwiper from "@/component/EpaperSwiper/EpaperThumbnailSwiper";
 import TimerComponent from "@/component/EpaperSwiper/Epaper/CountdownTimerComponent";
 import CitySelection from "@/component/EpaperSwiper/Epaper/CitySelection";
@@ -10,17 +14,20 @@ import { formatDateWithMonthAbbr } from "@/utils/dateUtils";
 import { useRouter } from "next/navigation";
 import { genrateurl } from "../utility/CommonUtils";
 import { useSelector } from "react-redux";
-import EpaperZoom from "../EpaperSwiper/EpaperZoom";
 import EpaperSubscribe from "../EpaperSwiper/EpaperSubscribe";
 import DataLoading from "../Common/DataLoading";
 import variable from "../utility/variable";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-const PdfView = dynamic(() => import("./pdfView"), {
-    ssr: false
-});
-// Define prop types for type checking
+import {
+  HiChevronLeft,
+  HiChevronRight,
+  HiMagnifyingGlassPlus,
+  HiMagnifyingGlassMinus,
+} from "react-icons/hi2";
+import { useSwipeable } from "react-swipeable";
 
+// Set up PDF.js worker
+import PdfView from "./pdfView";
 
 const DetailComponentPDF = ({
   data = [],
@@ -34,40 +41,99 @@ const DetailComponentPDF = ({
 }) => {
   // State management
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [largeSwiper, setLargeSwiper] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showCitySelection, setShowCitySelection] = useState(false);
   const [showPages, setShowPages] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
   const [date, setDate] = useState(new Date(currentDate || Date.now()));
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(Math.max(0, pageno - 1));
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(
+    Math.max(0, pageno - 1)
+  );
+  const prevDateRef = useRef(date);
+  const prevCityRef = useRef(currentCity);
   const [isZoom, setIsZoom] = useState(false);
   const [showModal, setShowModal] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [starttimer, setStartTimer] = useState(false);
-
+  const [numPages, setNumPages] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [preloadedNext, setPreloadedNext] = useState(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const containerRef = useRef(null);
+  const [isVerticalScroll, setIsVerticalScroll] = useState(false);
+  const changeVerticalScroll = (value) => {
+    setIsVerticalScroll(!isVerticalScroll);
+  };
   const router = useRouter();
-  const { user: userDetail, isLoading: userLoading, isAuthenticated } = useSelector(
-    (state) => state.userData
-  );
+  const {
+    user: userDetail,
+    isLoading: userLoading,
+    isAuthenticated,
+  } = useSelector((state) => state.userData);
+
+  useEffect(() => {
+    setCurrentSlideIndex(pageno - 1);
+  }, [pageno]);
 
   // Memoized derived data
   const firstPage = useMemo(() => data?.[0] || {}, [data]);
-  const images = useMemo(() => data?.map((item) => item.page_image) || [], [data]);
-  const cities = useMemo(() => 
-    currentCities?.flatMap((state) =>
-      state.regions?.flatMap((region) =>
-        region.cities?.map((city) => ({
-          name: city.city_name,
-          date: new Date().toLocaleDateString("en-IN"),
-          code: city.code,
-        }))
-      )
-    ) || [], [currentCities]);
+  const images = useMemo(
+    () => data?.map((item) => item.page_pdf) || [],
+    [data]
+  );
+  const imagesList = useMemo(
+    () => data?.map((item) => item.page_image) || [],
+    [data]
+  );
+  const cities = useMemo(
+    () =>
+      currentCities?.flatMap((state) =>
+        state.regions?.flatMap((region) =>
+          region.cities?.map((city) => ({
+            name: city.city_name,
+            date: new Date().toLocaleDateString("en-IN"),
+            code: city.code,
+          }))
+        )
+      ) || [],
+    [currentCities]
+  );
 
-  // Handle countdown timer
+  // Map items to DocViewer documents format
+  const docs = useMemo(
+    () =>
+      images.map((item, index) => ({
+        uri: item,
+        fileName: `Page ${index + 1}`,
+      })),
+    [images]
+  );
   useEffect(() => {
-    if(starttimer==false) return
+    try {
+      const formattedDate = formatDateWithMonthAbbr(date);
+      const newUrl = `/epaper/${formattedDate}-${eid}-${currentCity}-edition-${currentCity}-${pageno}.html`;
+
+      if (
+        date.getTime() !== prevDateRef.current.getTime() ||
+        currentCity !== prevCityRef.current
+      ) {
+        const resetUrl = `/epaper/${formattedDate}-${eid}-${currentCity}-edition-${currentCity}-1.html`;
+        setCurrentUrl(resetUrl);
+        window.location.href = resetUrl;
+      } else if (currentUrl !== newUrl) {
+        setCurrentUrl(newUrl);
+        window.location.href = resetUrl;
+      }
+
+      prevDateRef.current = date;
+      prevCityRef.current = currentCity;
+    } catch (error) {
+      console.error("Error updating URL:");
+    }
+  }, [date, eid, currentCity, pageno]);
+
+  useEffect(() => {
+    if (!starttimer) return;
 
     if (timeLeft <= 0) {
       setStartTimer(false);
@@ -88,9 +154,11 @@ const DetailComponentPDF = ({
     }, 1000);
 
     return () => clearInterval(countdown);
-  }, [timeLeft]);
-  console.log("Time left:", data);
+  }, [timeLeft, starttimer]);
+
+  // Handle user authentication and subscription logic
   useEffect(() => {
+    
     if (userLoading || isAuthenticated == null) return;
 
     const pageview = parseInt(localStorage.getItem(variable.FIRST_VIEW)) || 60;
@@ -103,19 +171,27 @@ const DetailComponentPDF = ({
     } else {
       setShowModal(3);
     }
-  }, [userLoading, userDetail, isAuthenticated]);
+  }, [userDetail, isAuthenticated, userLoading]);
 
-  // Handle URL updates
-//   useEffect(() => {
-//     try {
-//       const formattedDate = formatDateWithMonthAbbr(date);
-//       const newUrl = `/epaper/${formattedDate}-${eid}-${currentCity}-edition-${currentCity}-${pageno}.html`;
-//       setCurrentUrl(newUrl);
-//       router.replace(newUrl, { scroll: false });
-//     } catch (error) {
-//       console.error("Error updating URL:", error);
-//     }
-//   }, [date, eid, currentCity, pageno, router]);
+  // useEffect(() => {
+  //   if (images.length > 0 && currentSlideIndex >= images.length) {
+  //     setCurrentSlideIndex(0);
+  //   }
+  // }, [images, currentSlideIndex]);
+
+  // Preload the next PDF
+  // useEffect(() => {
+  //   if (currentSlideIndex < images.length - 1) {
+  //     const nextPdfUrl = images[currentSlideIndex + 1];
+  //     if (nextPdfUrl) {
+  //       setPreloadedNext(nextPdfUrl);
+  //     }
+  //   } else {
+  //     setPreloadedNEXT(null);
+  //   }
+  // }, [currentSlideIndex, images]);
+
+  // Keyboard event listener for left/right arrow keys
 
   // Handlers
   const handleDateChange = useCallback((newDate) => {
@@ -130,15 +206,22 @@ const DetailComponentPDF = ({
     setShowPages((prev) => !prev);
   }, []);
 
-  const handleThumbnailClick = useCallback((index) => {
-    if (largeSwiper) {
-      largeSwiper.slideTo(index, 300);
-    }
-  }, [largeSwiper]);
+  const handleThumbnailClick = useCallback(
+    (index) => {
+      setCurrentSlideIndex(index);
+      const formattedDate = formatDateWithMonthAbbr(currentDate);
+      const newUrl = `/epaper/${formattedDate}-${eid}-${currentCity}-edition-${currentCity}-${
+        index + 1
+      }.html`;
+      setCurrentUrl(newUrl);
+      router.replace(newUrl, { scroll: false });
+    },
+    [currentCity, eid, currentDate, router]
+  );
 
-
-  const onCityChange = useCallback((city) => {
+  const onCityChange = (city) => {
     try {
+      console.log("Selected city:", city);
       const slugParts = slug.split("-");
       const year = slugParts[0];
       const monthAbbr = slugParts[1].toLowerCase();
@@ -147,31 +230,113 @@ const DetailComponentPDF = ({
       const citySlug = city.name.replace(/\s+/g, "-");
       const cityCode = city.code ?? 1;
       const newUrl = genrateurl({ date: formattedDate, cityCode, citySlug });
-      router.replace(newUrl, { scroll: false });
+      window.location.href = newUrl;
     } catch (error) {
       console.error("Error changing city:", error);
     }
-  }, [slug, router]);
+  };
 
   const toggleZoom = useCallback(() => {
     setIsZoom((prev) => !prev);
   }, []);
-  const [numPages, setNumPages] = useState();
-  const [pageNumber, setPageNumber] = useState(2);
 
-  function onDocumentLoadSuccess({ numPages }) {
+  const handleUrlChange = useCallback((newUrl) => {
+    setCurrentUrl(newUrl);
+  }, []);
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => !isVerticalScroll && !isZoom && goToNextSlide(),
+    onSwipedRight: () => !isVerticalScroll && !isZoom && goToPreviousSlide(),
+    onSwipedUp: () => isVerticalScroll && !isZoom && goToNextSlide(),
+    onSwipedDown: () => isVerticalScroll && !isZoom && goToPreviousSlide(),
+    delta: 10,
+    preventDefaultTouchmoveEvent: true,
+    trackTouch: true,
+    trackMouse: false,
+  });
+
+  // Handle next slide
+  const goToNextSlide = useCallback(() => {
+    if (isTransitioning || currentSlideIndex >= images.length - 1) return;
+    setIsTransitioning(true);
+    const newIndex = currentSlideIndex + 1;
+    setCurrentSlideIndex(newIndex);
+
+    // Update URL
+    const formattedDate = formatDateWithMonthAbbr(currentDate);
+    const newUrl = `/epaper/${formattedDate}-${eid}-${currentCity}-edition-${currentCity}-${
+      newIndex + 1
+    }.html`;
+    router.replace(newUrl, { scroll: false });
+    handleUrlChange(newUrl);
+    setIsTransitioning(false);
+  }, [
+    currentSlideIndex,
+    currentDate,
+    eid,
+    currentCity,
+    router,
+    handleUrlChange,
+  ]);
+
+  // Handle previous slide
+  const goToPreviousSlide = useCallback(() => {
+    if (isTransitioning || currentSlideIndex <= 0) return;
+    setIsTransitioning(true);
+    const newIndex = currentSlideIndex - 1;
+    setCurrentSlideIndex(newIndex);
+
+    // Update URL
+    const formattedDate = formatDateWithMonthAbbr(currentDate);
+    const newUrl = `/epaper/${formattedDate}-${eid}-${currentCity}-edition-${currentCity}-${
+      newIndex + 1
+    }.html`;
+    router.replace(newUrl, { scroll: false });
+    handleUrlChange(newUrl);
+    setIsTransitioning(false);
+  }, [
+    currentSlideIndex,
+    currentDate,
+    eid,
+    currentCity,
+    router,
+    handleUrlChange,
+  ]);
+
+  // Handle zoom in
+  const handleZoomIn = useCallback(() => {
+    setZoomLevel((prev) => Math.min(prev + 1, 3)); // Max zoom 3x
+  }, []);
+
+  // Handle zoom out
+  const handleZoomOut = useCallback(() => {
+    setZoomLevel((prev) => Math.max(prev - 1, 0.5)); // Min zoom 0.5x
+  }, []);
+
+  // Handle document load success
+  const onDocumentLoadSuccess = useCallback(({ numPages }) => {
     setNumPages(numPages);
-  }
- // pdfUrl = 'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf';
- const  pdfUrl = 'https://epaperapi.jagran.com/naiduniaEpaper/20082025/indore/19ujn-pg1-0225824357.pdf';
-
-  const goToPreviousPage = () => {
-    setPageNumber((prev) => Math.max(prev - 1, 1));
-  };
-
-  const goToNextPage = () => {
-    setPageNumber((prev) => Math.min(prev + 1, numPages));
-  };
+  }, []);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (isTransitioning) return;
+      if (!isVerticalScroll) {
+        if (event.key === "ArrowLeft") {
+          goToPreviousSlide();
+        } else if (event.key === "ArrowRight") {
+          goToNextSlide();
+        }
+      } else {
+        if (event.key === "ArrowUp") {
+          goToPreviousSlide();
+        } else if (event.key === "ArrowDown") {
+          goToNextSlide();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isTransitioning, isVerticalScroll]);
   // Loading state
   if (userLoading || isAuthenticated == null) {
     return <DataLoading />;
@@ -204,31 +369,90 @@ const DetailComponentPDF = ({
   }
 
   return (
-    <main className="container mx-auto">
+    <main className="mx-auto">
       {showModal === 2 && <TimerComponent timeLeft={timeLeft} />}
-      
-      {isZoom ? (
-        <EpaperZoom
-          isZoom={isZoom}
-          toggleZoom={toggleZoom}
-          image={data[currentSlideIndex]?.page_largeimage}
-        />
-      ) : (
-      <PdfView
-        numPages={numPages}
-        pageNumber={pageNumber}
-        pdfUrl={pdfUrl}
-        onDocumentLoadSuccess={onDocumentLoadSuccess}
-        goToPreviousPage={goToPreviousPage}
-        goToNextPage={goToNextPage}
-      />
-      )}
-      
+
+      <div
+        className="relative w-full max-w-full overflow-hidden"
+        style={isVerticalScroll ? { overflowY: "auto", height: "100vh" } : {}}
+        {...swipeHandlers}
+      >
+        {/* Navigation and Zoom Buttons */}
+        <button
+          onClick={goToPreviousSlide}
+          disabled={currentSlideIndex <= 0 || isTransitioning}
+          className="fixed left-5 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white p-2.5 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Previous slide"
+        >
+          <HiChevronLeft size={24} />
+        </button>
+
+        {/* Next button - middle right */}
+        <button
+          onClick={goToNextSlide}
+          disabled={currentSlideIndex >= images.length - 1 || isTransitioning}
+          className="fixed right-5 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white p-2.5 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Next slide"
+        >
+          <HiChevronRight size={24} />
+        </button>
+
+        {/* Zoom controls - bottom right */}
+        <div className="fixed bottom-[80px] right-[20px] z-10 flex flex-col gap-2">
+          <button
+            onClick={handleZoomIn}
+            disabled={zoomLevel >= 3 || isTransitioning}
+            className="bg-black/50 text-white p-1.5 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Zoom in"
+          >
+            <HiMagnifyingGlassPlus size={24} />
+          </button>
+          <button
+            onClick={handleZoomOut}
+            disabled={zoomLevel <= 0.5 || isTransitioning}
+            className="bg-black/50 text-white p-1.5 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Zoom out"
+          >
+            <HiMagnifyingGlassMinus size={24} />
+          </button>
+        </div>
+
+        {/* Slide Container */}
+        <div
+          ref={containerRef}
+          className="flex items-center justify-center w-full h-full  pb-[100px] sm:pb-[80px]"
+          style={isVerticalScroll ? { flexDirection: "column" } : {}}
+        >
+          <PdfView
+            isLoading={isLoading}
+            currentSlideIndex={currentSlideIndex}
+            docs={docs}
+            onDocumentLoadSuccess={onDocumentLoadSuccess}
+            zoomLevel={zoomLevel}
+          />
+        </div>
+
+        {/* Preload Next PDF (Hidden) */}
+        {/* {preloadedNext && (
+          <div style={{ display: "none" }}>
+            <DocViewer
+              documents={[{ uri: preloadedNext }]}
+              pluginRenderers={DocViewerRenderers}
+            />
+          </div>
+        )} */}
+
+        {/* Pagination Info */}
+        <div className="text-center p-2.5 text-base text-gray-800">
+          Page {currentSlideIndex + 1} of {images.length}
+        </div>
+      </div>
+
       <CitySelection
         showCitySelection={showCitySelection}
         setShowCitySelection={setShowCitySelection}
       />
-      
+
       <FooterNewsPaper
         showCitySelection={showCitySelection}
         onDateChange={handleDateChange}
@@ -241,11 +465,13 @@ const DetailComponentPDF = ({
         cities={cities}
         domainInfo={domainInfo}
         userDetail={userDetail}
-        toogleZoom={toggleZoom}
+        toggleZoom={toggleZoom}
         isZoom={isZoom}
+        changeVerticalScroll={changeVerticalScroll}
+        isVerticalScroll={isVerticalScroll}
       >
         <EpaperThumbnailSwiper
-          images={images}
+          images={imagesList}
           thumbsSwiper={thumbsSwiper}
           setThumbsSwiper={setThumbsSwiper}
           isLoading={isLoading}
@@ -257,6 +483,5 @@ const DetailComponentPDF = ({
     </main>
   );
 };
-
 
 export default DetailComponentPDF;

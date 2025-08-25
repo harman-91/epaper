@@ -9,7 +9,9 @@ const variable= {
   PAGE_VIEW_ARR: "pv_id",
   DMP_ID:"DMP_ID",
   HIDE:"hide",
-  FIRST_VIEW:"first_view"
+  FIRST_VIEW:"first_view",
+  IS_EXPIRED:'is_expired',
+  SUBSCRIPTION_STATUS:'subscription_status'
 
 
 };

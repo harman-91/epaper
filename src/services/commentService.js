@@ -28,7 +28,6 @@ exports.getBookmarkList = async ({
       body,
       payload
     );
-    // console.log("--", BASE_URL + "bookmarks/user/list", body, payload);
 
     return resp.data.data;
   } catch (err) {

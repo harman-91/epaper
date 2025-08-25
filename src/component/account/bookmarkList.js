@@ -10,6 +10,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import variable from "@/component/utility/variable";
 import { setCookie } from "@/component/utility/cookie";
 import { useAppDispatch } from "@/store/reduxHooks";
+import GlobalLink from "../global/GlobalLink";
 function BookmarkList(props) {
   const [list, setList] = useState(props?.bookmarkList);
   const [page, setPage] = useState(1);
@@ -126,7 +127,7 @@ function BookmarkList(props) {
               >
                 <div className="flex  space-x-4 rtl:space-x-reverse">
                   <div className="w-28 md:w-auto shrink-0">
-                    <a href={el.url}>
+                    <GlobalLink href={el.url}>
                       <Image
                         width={1200}
                         height={675}
@@ -134,11 +135,11 @@ function BookmarkList(props) {
                         src={el.imgurl}
                         className="rounded-lg w-48"
                       />
-                    </a>
+                    </GlobalLink>
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm md:text-xl text-gray-900 hover:underline">
-                      <a href={el.url}>{el.headline}</a>
+                      <GlobalLink href={el.url}>{el.headline}</GlobalLink>
                     </h3>
                   </div>
                   <div className="inline-flex text-base font-semibold text-gray-900 w-4 md:w-16">

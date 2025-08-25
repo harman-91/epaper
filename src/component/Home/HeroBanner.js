@@ -8,8 +8,8 @@ export default function HeroBanner({cities,userDetail}) {
 
   return (
     <>
-        <SubscriptionEndedTop userDetail={userDetail} />
-    <section className="relative pt-10">
+      <SubscriptionEndedTop userDetail={userDetail} />
+    <section className="pt-10">
       <div className="absolute top-0 left-0 z-[-1]">
         <img src="/images/shadowBlue.png" alt="" className="opacity-50" />
       </div>
@@ -18,18 +18,18 @@ export default function HeroBanner({cities,userDetail}) {
       </div>
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-4">
-          <div className="lg:w-1/2 flex justify-center relative z-10">
-            <div>
+          <div className="w-full lg:w-1/2 flex justify-center">
+            <div className="w-full">
               <div className="hidden lg:block text-center lg:text-left">
-                <h2 className="text-5xl font-semibold text-gray-900 -ml-12">माध्यम नया -</h2>
-                <h1 className="text-9xl font-black text-red-600 font-khand leading-tight my-2">
+                <h2 className="text-5xl font-semibold text-gray-900">माध्यम नया -</h2>
+                <h1 className="text-9xl font-black text-red-600 font-khand leading-tight my-2 ml-12">
                   भरोसा
                 </h1>
-                <h2 className="text-5xl font-semibold text-gray-900 translate-x-[-15%]">
+                <h2 className="text-5xl font-semibold text-gray-900 -mt-10">
                   वही
                 </h2>
               </div>
-              <div className="lg:hidden text-center">
+              <div className="lg:hidden text-center w-full">
                 <h1 className="text-4xl font-bold text-gray-900 font-khand">
                   माध्यम नया भरोसा वही
                 </h1>
@@ -39,8 +39,7 @@ export default function HeroBanner({cities,userDetail}) {
               </div>
             </div>
           </div>
-          <div className="lg:w-1/2">
-
+          <div className="w-full lg:w-1/2">
             <FavoriteCities favoriteCities={cities} />
           </div>
         </div>

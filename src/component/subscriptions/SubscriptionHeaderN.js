@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "../../styles/SubscriptionLatest.module.css";
+import GlobalLink from "../global/GlobalLink";
 
 function SubscriptionHeaderN() {
   return (
@@ -19,9 +20,9 @@ function SubscriptionHeaderN() {
           </span> */}
 
           <div className={styles.logoSection}>
-            <a title="Dainik Jagran Hindi News" href="/">
+            <GlobalLink title="Dainik Jagran Hindi News" href="/">
               <svg><use href="/sprite.svg#jagran"></use></svg>
-            </a>
+            </GlobalLink>
           </div>
         <h1>विज्ञापन मुक्त न्यूज़ अनुभव</h1>
         <div className={styles.subtitle}>सिर्फ जागरण पर</div>

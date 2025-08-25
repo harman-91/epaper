@@ -42,7 +42,7 @@ function SeoCommonScript() {
 
   return (
     <>
-      <Script
+      {/* <Script
         id="referrer-handler-script"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
@@ -57,7 +57,7 @@ function SeoCommonScript() {
                   }
                `,
         }}
-      />
+      /> */}
     </>
   );
 }

@@ -17,7 +17,6 @@ exports.userProfile = async ({ auth_token }) => {
     });
 };
 exports.userActiveSubscription = async ({ auth_token, domain }) => {
-  console.log("Fetching active subscription for domain:", domain);
   try{
     const resp=await axios.post(
       BASE_URL + "api/v1/subscription/get-currently-active",

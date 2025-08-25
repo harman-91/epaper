@@ -1,6 +1,6 @@
-
 import HeroBanner from "@/component/Home/HeroBanner";
 import PrimeCities from "@/component/Home/PrimeCities";
+import { getHomeMeta } from "@/component/meta/homeMeta";
 import {
   genratestateurl,
   genrateurl,
@@ -13,12 +13,15 @@ import { convertToCityList } from "@/utils/apiUtils";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const Listing = ({ currentCities, cities }) => {
-    const userDetail = useSelector((state) => state.userData.user);
-
+const Listing = ({ currentCities, cities, domainInfo }) => {
+  const userDetail = useSelector((state) => state.userData.user);
   return (
     <main>
-      <HeroBanner cities={currentCities} userDetail={userDetail} />
+      <HeroBanner
+        cities={currentCities}
+        userDetail={userDetail}
+        domainInfo={domainInfo}
+      />
       <PrimeCities currentCities={currentCities} cities={cities} />
     </main>
   );
@@ -31,11 +34,20 @@ export const getServerSideProps = withHeaderProps("CommonLayout")(
     const currentCities = await epaperSearchCities({
       domain: domainInfo.apiDomainValue,
     });
-          const cities = convertToCityList(currentCities);
-
+    const cities = convertToCityList(currentCities);
+    const homeMeta = getHomeMeta(domainInfo.domainId);
+    const metadata = {
+      title: homeMeta.title || "",
+      description: homeMeta.desc || "",
+      keywords: homeMeta.keywords || "",
+      alternates: { canonical: homeMeta.canonical },
+    };
     return {
       props: {
-        currentCities,cities,
+        currentCities,
+        cities,
+        domainInfo,
+        metadata,
       },
     };
   }

@@ -24,12 +24,10 @@ const GoogleLoginBtn = ({ onSuccess, onError, auth,size }) => {
           }
         }
       } catch (err) {
-        console.log("err", err);
         onError("SomeThing Went wrong");
       }
     },
     onError: (error) => {
-      console.log(error);
       onError("SomeThing Went wrong");
     },
   });
