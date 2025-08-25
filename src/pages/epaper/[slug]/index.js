@@ -63,19 +63,11 @@ export const getServerSideProps = withHeaderProps("HeaderLayout")(
     if (!dateRegex.test(currentDate) || isNaN(pageno) || pageno < 1) {
       return { notFound: true };
     }
-    const [data, currentCities] = await Promise.all([
-      epaperDetail({
-        type: domainInfo.apiDomainValue,
-        date: currentDate,
-        ename: currentCity,
-        pageno,
-      }),
-      epaperSearchCities({ domain: domainInfo.apiDomainValue }),
-    ]);
+    const [data, currentCities] = [null,null]
 
-    if (!data) {
-      return { notFound: true };
-    }
+    // if (!data) {
+    //   return { notFound: true };
+    // }
     const formattedDate = monthNumber
       ? `${day} ${
           monthAbbr.charAt(0).toUpperCase() + monthAbbr.slice(1)
@@ -93,14 +85,14 @@ export const getServerSideProps = withHeaderProps("HeaderLayout")(
       keywords: keywords || "",
       alternates: { canonical: canonicalUrl },
     };
-    if (data.length < pageno) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/epaper/${year}-${slugParts[1]}-${day}-${eid}-${currentCity}-edition-${currentCity}-1.html`,
-        },
-      };
-    }
+    // if (data.length < pageno) {
+    //   return {
+    //     redirect: {
+    //       permanent: false,
+    //       destination: `/epaper/${year}-${slugParts[1]}-${day}-${eid}-${currentCity}-edition-${currentCity}-1.html`,
+    //     },
+    //   };
+    // }
 
     return {
       props: {

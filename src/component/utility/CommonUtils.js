@@ -46,7 +46,7 @@ const naidunia = {
   lang: "hi",
   apiDomainValue: "naidunia",
   url: "https://epaper.naidunia.com",
-  return_url: "http://172.31.41.85:3001/subscription/plan",
+  return_url: "https://epaper-nu.vercel.app/subscription/plan",
 };
 const jagran = {
   domain: "epaper.jagran.com",

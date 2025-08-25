@@ -31,9 +31,7 @@ export const getServerSideProps = withHeaderProps("CommonLayout")(
   async (context) => {
     const host = context?.req?.headers?.host || "localhost";
     const domainInfo = getDomain(host);
-    const currentCities = await epaperSearchCities({
-      domain: domainInfo.apiDomainValue,
-    });
+    const currentCities = null
     const cities = convertToCityList(currentCities);
     const homeMeta = getHomeMeta(domainInfo.domainId);
     const metadata = {
