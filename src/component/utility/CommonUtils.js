@@ -73,6 +73,7 @@ const punjabiJagran = {
 export function getDomain(host) {
   const h = {
     "paper.naidunia.com:3000": naidunia,
+    "epaper-nu.vercel.app": naidunia,
     "localhost:3000": naidunia,
     localhost: naidunia,
     "172.31.41.85:3001": naidunia,
