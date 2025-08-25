@@ -81,6 +81,7 @@ export function getDomain(host) {
     "paper.punjabijagran.com:3000": punjabiJagran,
     "paper.punjabijagran.com": punjabiJagran,
   };
+  console.log("host", host);
   return h[host];
 }
 
